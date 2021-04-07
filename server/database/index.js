@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const {Sequelize, Model} = require('sequelize');
+const User = require('./User');
 const basename = path.basename(__filename);
 const db = {};
 
@@ -21,7 +22,7 @@ const sequelize = new Sequelize({
     acquire: 300000
   },
   define: {
-    timestamps: true,
+    timestamps: false,
     underscored: true
   }
 });
@@ -55,6 +56,16 @@ Model.findOrFail = async function(pk) {
 db.connect = () => {
   return sequelize.authenticate().then(() => {
     console.log('Database connection has been established successfully.');
+
+    /* sequelize.query("SELECT * from users").then((results,metadata) => {
+      console.log(results);
+      console.log(metadata);
+    }); */
+
+    db.User.findAll().then((users) => {
+      console.log("All users:", JSON.stringify(users, null, 2));
+    }); 
+    
   }).catch(err => {
     console.error('Unable to connect to the database:', err);
   });

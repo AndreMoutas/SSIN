@@ -1,14 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
     // Example
     const User = sequelize.define('User', {
+        oneTimeId: {
+            type: DataTypes.TEXT,
+            primaryKey: true,
+        },
         username: {
             type: DataTypes.TEXT,
             allowNull: false,
-            unique: true,
         },
-        password_digest: {
-            type: DataTypes.TEXT,
-            allowNull: false
+        clearanceLevel: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         }
     }, {
         sequelize,
@@ -16,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.associate = (models) => {
-
+        
     }
 
     User.prototype.toJSON = function() {

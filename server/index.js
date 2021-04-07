@@ -16,6 +16,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+const utils = require("./utils");
+
 // Setup session and passport (Poderá ser preciso no futuro)
 /*
 const session = require("express-session");
@@ -62,6 +64,28 @@ app.use(function (err, req, res, next) {
 // Run the app
 const port = process.env.APP_PORT || 3001;
 
+// Pre-registration
+function addUser(username, clearanceLevel) {
+    if(username.length > 8) {
+        console.error("Invalid length for username! It should contain 8 characters at maximum.");
+        return;
+    }
+    let oneTimeId = utils.generateString(12);
+    console.log("One time id for user " + username + " has been generated: " + oneTimeId);
+
+    let user = db.User.build({ 
+        oneTimeId: oneTimeId,
+        username: username, 
+        clearanceLevel: clearanceLevel
+    });
+
+    user.save().then(() => {
+        console.log("The new user instance was successfully added to the database!")
+    });
+}
+
 app.listen(port, () => {
   console.log(`App running on ${process.env.NODE_ENV} mode, at port ${port}.`)
 })
+
+addUser("John", 3);
