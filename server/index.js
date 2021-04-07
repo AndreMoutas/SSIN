@@ -16,7 +16,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-const utils = require("./utils");
+const preRegistration = require("./services/pre-registration");
 
 // Setup session and passport (Poderá ser preciso no futuro)
 /*
@@ -65,31 +65,11 @@ app.use(function (err, req, res, next) {
 const port = process.env.APP_PORT || 3001;
 
 // Pre-registration
-function addUser(fullName, clearanceLevel) {
-    if(fullName.length < 10) {
-        console.error("Full name should contain at least 10 characters!");
-        return;
-    }
 
-    let oneTimeId = utils.generateString(12);
-    let username = utils.generateUsername(fullName);
-
-    let user = db.User.build({ 
-        oneTimeId: oneTimeId,
-        fullName: fullName,
-        username: username, 
-        clearanceLevel: clearanceLevel
-    });
-
-    user.save().then(() => {
-        console.log("The new user instance was successfully added to the database!")
-        console.log("User details: username = " + username + " , oneTimeId = " + oneTimeId);
-    });
-}
 
 app.listen(port, () => {
   console.log(`App running on ${process.env.NODE_ENV} mode, at port ${port}.`)
 })
 
 /* Adds a new user to the database every time the code runs */
-//addUser("John Smith", 3);
+preRegistration.addUser("John Smith", 3);
