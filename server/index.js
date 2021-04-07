@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const preRegistration = require("./services/pre-registration");
+const operations = require("./services/operations");
 
 // Setup session and passport (Poderá ser preciso no futuro)
 /*
@@ -49,8 +50,21 @@ app.use(logger('dev'));
 // Routes
 app.get("/sqrt", (req, res) => {
     const number = req.query.number || 0;
-    const sqrt = Math.sqrt(number);
-    return res.status(200).json(sqrt);
+    const opResult = operations.calculateSquareRoot(number);
+    return res.status(200).json(opResult);
+})
+
+app.get("/cbrt", (req, res) => {
+    const number = req.query.number || 0;
+    const opResult = operations.calculateCubitRoot(number);
+    return res.status(200).json(opResult);
+})
+
+app.get("/nrt", (req, res) => {
+    const number = req.query.number || 0;
+    const root = req.query.root || 0;
+    const opResult = operations.calculateNRoot(number, root);
+    return res.status(200).json(opResult);
 })
 
 // Error handler
