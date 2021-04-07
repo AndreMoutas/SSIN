@@ -65,22 +65,25 @@ app.use(function (err, req, res, next) {
 const port = process.env.APP_PORT || 3001;
 
 // Pre-registration
-function addUser(username, clearanceLevel) {
-    if(username.length > 8) {
-        console.error("Invalid length for username! It should contain 8 characters at maximum.");
+function addUser(fullName, clearanceLevel) {
+    if(fullName.length < 10) {
+        console.error("Full name should contain at least 10 characters!");
         return;
     }
+
     let oneTimeId = utils.generateString(12);
-    console.log("One time id for user " + username + " has been generated: " + oneTimeId);
+    let username = utils.generateUsername(fullName);
 
     let user = db.User.build({ 
         oneTimeId: oneTimeId,
+        fullName: fullName,
         username: username, 
         clearanceLevel: clearanceLevel
     });
 
     user.save().then(() => {
         console.log("The new user instance was successfully added to the database!")
+        console.log("User details: username = " + username + " , oneTimeId = " + oneTimeId);
     });
 }
 
@@ -88,4 +91,5 @@ app.listen(port, () => {
   console.log(`App running on ${process.env.NODE_ENV} mode, at port ${port}.`)
 })
 
-addUser("John", 3);
+/* Adds a new user to the database every time the code runs */
+//addUser("John Smith", 3);

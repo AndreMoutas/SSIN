@@ -8,5 +8,9 @@ module.exports = {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
+    },
+    generateUsername(fullName) {
+        let username = fullName.replace(/ /g, "");
+        return username.substr(0, Math.min(7, username.length - 1));
     }
 }

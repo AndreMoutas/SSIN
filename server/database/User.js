@@ -5,6 +5,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             primaryKey: true,
         },
+        fullName: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
         username: {
             type: DataTypes.TEXT,
             allowNull: false,
