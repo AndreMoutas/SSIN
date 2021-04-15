@@ -21,22 +21,25 @@ async function Register(username, oneTimeId, password) {
             password: password
     });
 
-    // todo: guardar token
+
+    const token = result.data.token;
+
     // encriptar e guardar a password em json + guardar username
-    console.log(hashPassword(password));
     let user = {
         username: username,
-        passwordDigest: await hashPassword(password)
+        passwordDigest: await hashPassword(password),
+        token: token
     }
     fs.writeFileSync('user.json', JSON.stringify(user));
  }
 
-async function Login(password){
+async function Login(password) {
     // verificar se passe encriptada é igual ao json
     let jsonData = require('./user.json');
     console.log(jsonData);
-    if(jsonData.username == null || !checkPassword(password,jsonData.password))
-        boom;
+
+    if (!jsonData || jsonData.username == null || !await checkPassword(password, jsonData.passwordDigest)) // local authentication
+        return console.error("Wrong password");
 
     // mandar pedido
     const result = await axios.post("http://localhost:3000/login",{
@@ -45,9 +48,11 @@ async function Login(password){
 
     })
 
-    // todo: guardar token
-}
+    console.log(result.data)
 
-//todo: fazer uma cena que mete o token em tds os pedidos (http interceptor?)
+    jsonData.token = result.data.token
+
+    fs.writeFileSync('user.json', JSON.stringify(jsonData));
+}
 
 module.exports = {Register, Login}

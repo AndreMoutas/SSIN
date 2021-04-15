@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         oneTimeId: {
             type: DataTypes.TEXT,
-            primaryKey: true,
+            unique: true,
         },
         fullName: {
             type: DataTypes.TEXT,
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
 
     User.prototype.toJSON = function() {
         let values = Object.assign({}, this.get());
-        delete values.password_digest;
+        delete values.passwordDigest;
         return values;
     }
 

@@ -18,7 +18,9 @@ const preRegistration = require("./services/pre-registration");
 const operations = require("./services/operations");
 const authentication = require("./services/authentication");
 
+/*
 // Setup session and passport
+// Se calhar não vamos precisar disto afinal
 const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const passport = require('passport')
@@ -38,43 +40,65 @@ app.use(session({
 app.use(passport.initialize({}));
 app.use(passport.session({}));
 
+ */
+
 
 // Enable logger
 const logger = require('morgan');
 app.use(logger('dev'));
 
 // Routes
-app.get("/sqrt", (req, res) => {
+app.get("/sqrt", authentication.authenticateMiddleware, (req, res) => {
+    if (req.user.clearanceLevel < 1)
+        return res.status(403).json("Not enough clearance level: " + req.user.clearanceLevel)
+
     const number = req.query.number || 0;
     const opResult = operations.calculateSquareRoot(number);
     return res.status(200).json(opResult);
 })
 
-app.get("/cbrt", (req, res) => {
+app.get("/cbrt", authentication.authenticateMiddleware, (req, res) => {
+    if (req.user.clearanceLevel < 2)
+        return res.status(403).json("Not enough clearance level: " + req.user.clearanceLevel)
+
     const number = req.query.number || 0;
     const opResult = operations.calculateCubitRoot(number);
     return res.status(200).json(opResult);
 })
 
-app.get("/nrt", (req, res) => {
+app.get("/nrt", authentication.authenticateMiddleware, (req, res) => {
+    if (req.user.clearanceLevel < 3)
+        return res.status(403).json("Not enough clearance level: " + req.user.clearanceLevel)
+
     const number = req.query.number || 0;
     const root = req.query.root || 0;
     const opResult = operations.calculateNRoot(number, root);
     return res.status(200).json(opResult);
 })
 
-app.post("/register",(req,res) => {
+app.post("/register",async (req,res) => {
     const { username, password, oneTimeId } = req.body;
 
-    const result = authentication.register(username,oneTimeId,password);
-    return  res.status(200);
+    try {
+        const token = await authentication.register(username, oneTimeId, password);
+        return res.status(200).json({ token: token });
+    }
+    catch (err) {
+        console.error(err)
+        return res.status(401).json(err.message);
+    }
 })
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
     const { username, password } = req.body;
-
-    const result = authentication.login(username,password);
-    return  res.status(200);
+    try {
+        const token = await authentication.login(username, password, req, res); // !
+        return res.json({ token: token });
+    }
+    catch (err) {
+        console.error(err)
+        return res.status(401).json(err.message);
+    }
 })
 
 // Error handler
@@ -88,14 +112,12 @@ app.use(function (err, req, res, next) {
 // Run the app
 const port = process.env.APP_PORT || 3001;
 
-// Pre-registration
-
 
 app.listen(port, async () => {
     console.log(`App running on ${process.env.NODE_ENV} mode, at port ${port}.`)
     await db.connect();
-    await db.reset();
-    await store.sync();
+    // await db.reset();
+    // await store.sync();
 
-    preRegistration.addUser("William Smith", 1)
+    // preRegistration.addUser("William Smith", 1)
 })
