@@ -1,3 +1,4 @@
+const registration = require("./authentication");
 const axios = require("axios");
 
 
@@ -24,7 +25,11 @@ async function RequestNrt() {
 
     console.log(result.data);
 }
-
+/*
 RequestSqrt();
 RequestCbrt();
 RequestNrt();
+registration.Register('William','k0CkalZpZRD9','epic');
+*/
+//registration.Register('William','k0CkalZpZRD9','epic');
+registration.Login('epic');

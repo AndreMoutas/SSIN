@@ -8,8 +8,6 @@ const app = express();
 
 // Connect to database
 const db = require("./database/index");
-db.connect();
-// db.reset();
 
 // Body parser middleware
 const bodyParser = require('body-parser');
@@ -18,9 +16,9 @@ app.use(bodyParser.json())
 
 const preRegistration = require("./services/pre-registration");
 const operations = require("./services/operations");
+const authentication = require("./services/authentication");
 
-// Setup session and passport (Poderá ser preciso no futuro)
-/*
+// Setup session and passport
 const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const passport = require('passport')
@@ -34,13 +32,11 @@ app.use(session({
     store: store,
     resave: false,
     saveUninitialized: true,
-    secret: process.env.SESSION_COOKIE_SECRET,
+    secret: process.env.SESSION_SECRET,
     name: 'sessionId'
 }));
 app.use(passport.initialize({}));
 app.use(passport.session({}));
-store.sync();
-*/
 
 
 // Enable logger
@@ -67,6 +63,20 @@ app.get("/nrt", (req, res) => {
     return res.status(200).json(opResult);
 })
 
+app.post("/register",(req,res) => {
+    const { username, password, oneTimeId } = req.body;
+
+    const result = authentication.register(username,oneTimeId,password);
+    return  res.status(200);
+})
+
+app.post("/login", (req, res) => {
+    const { username, password } = req.body;
+
+    const result = authentication.login(username,password);
+    return  res.status(200);
+})
+
 // Error handler
 app.use(function (err, req, res, next) {
     console.log(err)
@@ -81,9 +91,11 @@ const port = process.env.APP_PORT || 3001;
 // Pre-registration
 
 
-app.listen(port, () => {
-  console.log(`App running on ${process.env.NODE_ENV} mode, at port ${port}.`)
-})
+app.listen(port, async () => {
+    console.log(`App running on ${process.env.NODE_ENV} mode, at port ${port}.`)
+    await db.connect();
+    await db.reset();
+    await store.sync();
 
-/* Adds a new user to the database every time the code runs */
-preRegistration.addUser("John Smith", 3);
+    preRegistration.addUser("William Smith", 1)
+})

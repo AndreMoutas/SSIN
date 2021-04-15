@@ -56,16 +56,6 @@ Model.findOrFail = async function(pk) {
 db.connect = () => {
   return sequelize.authenticate().then(() => {
     console.log('Database connection has been established successfully.');
-
-    /* sequelize.query("SELECT * from users").then((results,metadata) => {
-      console.log(results);
-      console.log(metadata);
-    }); */
-
-    db.User.findAll().then((users) => {
-      console.log("All users:", JSON.stringify(users, null, 2));
-    }); 
-    
   }).catch(err => {
     console.error('Unable to connect to the database:', err);
   });

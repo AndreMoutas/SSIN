@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
         clearanceLevel: {
             type: DataTypes.INTEGER,
             allowNull: false,
-        }
+        },
+        passwordDigest: DataTypes.TEXT
     }, {
         sequelize,
         tableName: "users",
