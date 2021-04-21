@@ -121,3 +121,16 @@ app.listen(port, async () => {
 
     // preRegistration.addUser("William Smith", 1)
 })
+
+var stdin = process.openStdin();
+
+stdin.addListener("data", function(input) {
+    /*let inputArray = input.toString().trim().split(" ");
+    console.log(inputArray);
+    if (inputArray[0] == "adduser") {
+        if (inputArray.length == 2)
+            preRegistration.addUser(inputArray[1], 1);
+        else if (inputArray.length == 3)
+            preRegistration.addUser(inputArray[1], parseInt(inputArray[2]));
+    }*/
+});
