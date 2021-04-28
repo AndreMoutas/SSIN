@@ -114,12 +114,10 @@ const port = process.env.APP_PORT || 3001;
 
 
 app.listen(port, async () => {
-    console.log(`App running on ${process.env.NODE_ENV} mode, at port ${port}.`)
+    console.log(`Server running on ${process.env.NODE_ENV} mode, at port ${port}.`)
     await db.connect();
     // await db.reset();
     // await store.sync();
-
-    // preRegistration.addUser("William Smith", 1)
 })
 
 var stdin = process.openStdin();
