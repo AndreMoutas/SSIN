@@ -33,7 +33,7 @@ async function Register(username, oneTimeId, password) {
     fs.writeFileSync('user.json', JSON.stringify(user));
  }
 
-async function Login(password) {
+async function Login(password, sender) {
     // verificar se passe encriptada é igual ao json
     let jsonData = require('./user.json');
     console.log(jsonData);
@@ -45,12 +45,12 @@ async function Login(password) {
     const result = await axios.post("http://localhost:3000/login",{
         username: jsonData.username,
         password: password,
-
+        sender: sender
     })
 
-    console.log(result.data)
+    console.log(result.data);
 
-    jsonData.token = result.data.token
+    jsonData.token = result.data.token;
 
     fs.writeFileSync('user.json', JSON.stringify(jsonData));
 }
