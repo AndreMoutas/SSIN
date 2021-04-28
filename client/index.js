@@ -5,16 +5,20 @@ const axios = require("axios");
 const express = require("express");
 const app = express();
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 // Adds Authorization header automatically
 axios.interceptors.request.use(
     request => {
         const userJSONData = require('./user.json');
         if (userJSONData)
-            request.headers['Authorization'] = `Bearer ${userJSONData.token}`
+            request.headers['Authorization'] = `Bearer ${userJSONData.token}`;
         return request;
     },
     error => {
-        return Promise.reject(error)
+        return Promise.reject(error);
     }
 )
 
@@ -74,7 +78,7 @@ stdin.addListener("data", function(input) {
             login(inputArray[1]); 
             break;
         case "message":
-            sendMessage(inputArray[1]);
+            sendMessage(inputArray[1], "ping");
             break;
     }
 });
@@ -83,12 +87,33 @@ function register(username, oneTimeID, password) {
     registration.Register(username, oneTimeID, password);
 }
 function login(password) {
-    registration.Login(password);
+    registration.Login(password, port);
 }
 
-async function sendMessage(receiver) {
-    const result = await axios.post("http://localhost:3001/message", {
-        text: "ping" 
+async function sendMessage(receiver, message) {
+    // Request server for client information
+    let result;
+    try {
+        result = await axios.post("http://localhost:3000/clientInfo", {
+        username: receiver
+    });
+    } catch (error) {
+        console.error(error);
+    }
+    
+
+    if (result.status != 200) {
+        console.error("Request failed!"); 
+        return;
+    }
+    
+    let clientInfo = result.data.clientInfo;
+
+    console.log(clientInfo);
+    
+    // Message the other client directly
+    await axios.post(`http://${clientInfo}/message`, {
+        text: message 
     });
 }
 
@@ -100,5 +125,5 @@ async function sendMessage(receiver) {
 //registration.Register('William','obxV4VtyMl0F','epic9000');
 //registration.Register('JohnSmi','3Vl2lUGwB7Wm','epic9000');
 // registration.Login('epic9000');
-// William obxV4VtyMl0F epic9000
-// JohnSmi 3Vl2lUGwB7Wm epic9000
+// register William obxV4VtyMl0F epic9000
+// register JohnSmi YGGeRiW2j7uj epic9000

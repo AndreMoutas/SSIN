@@ -11,12 +11,13 @@ const db = require("./database/index");
 
 // Body parser middleware
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const preRegistration = require("./services/pre-registration");
 const operations = require("./services/operations");
 const authentication = require("./services/authentication");
+const storage = require("./storage/Storage");
 
 /*
 // Setup session and passport
@@ -90,10 +91,24 @@ app.post("/register",async (req,res) => {
 })
 
 app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, sender } = req.body;
     try {
         const token = await authentication.login(username, password, req, res); // !
+        storage.addClientInfo(username, "localhost", sender);
         return res.json({ token: token });
+    }
+    catch (err) {
+        console.error(err)
+        return res.status(401).json(err.message);
+    }
+})
+
+app.post("/clientInfo", async (req, res) => {
+    const { username } = req.body;
+    
+    try {
+        let clientInfo = storage.getClientInfo(username);
+        return res.status(200).json({ clientInfo: clientInfo });
     }
     catch (err) {
         console.error(err)
