@@ -10,17 +10,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Adds Authorization header automatically
-axios.interceptors.request.use(
-    request => {
-        const userJSONData = require('./user.json');
-        if (userJSONData)
-            request.headers['Authorization'] = `Bearer ${userJSONData.token}`;
-        return request;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-)
+function SetAutomaticHeader(username) {
+    axios.interceptors.request.use(
+        request => {
+            const userJSONData = require(`./users/${username}.json`);
+            if (userJSONData)
+                request.headers['Authorization'] = `Bearer ${userJSONData.token}`;
+            return request;
+        },
+        error => {
+            return Promise.reject(error);
+        }
+    )
+}
 
 async function RequestSqrt() {
     const result = await axios.get("http://localhost:3000/sqrt", {
@@ -75,7 +77,7 @@ stdin.addListener("data", function(input) {
             register(inputArray[1], inputArray[2], inputArray[3]);
             break;
         case "login":
-            login(inputArray[1]); 
+            login(inputArray[1], inputArray[2]); 
             break;
         case "message":
             sendMessage(inputArray[1], "ping");
@@ -85,9 +87,10 @@ stdin.addListener("data", function(input) {
 
 function register(username, oneTimeID, password) {
     registration.Register(username, oneTimeID, password);
+    SetAutomaticHeader(username);
 }
-function login(password) {
-    registration.Login(password, port);
+function login(username, password) {
+    registration.Login(username, password, port);
 }
 
 async function sendMessage(receiver, message) {
@@ -117,13 +120,7 @@ async function sendMessage(receiver, message) {
     });
 }
 
-//RequestSqrt();
-//RequestCbrt();
-// RequestNrt();
-
-
-//registration.Register('William','obxV4VtyMl0F','epic9000');
-//registration.Register('JohnSmi','3Vl2lUGwB7Wm','epic9000');
-// registration.Login('epic9000');
 // register William obxV4VtyMl0F epic9000
-// register JohnSmi YGGeRiW2j7uj epic9000
+// register JohnSmi YGGeRiW2j7uj epic
+// login William epic9000
+// login JohnSmi epic
