@@ -30,12 +30,15 @@ async function Register(username, oneTimeId, password) {
         passwordDigest: await hashPassword(password),
         token: token
     }
-    fs.writeFileSync('user.json', JSON.stringify(user));
+    console.log(user);
+    let filePath = "./users/" + username + ".json";
+    fs.writeFileSync(filePath, JSON.stringify(user));
  }
 
-async function Login(password, sender) {
+async function Login(username, password, sender) {
     // verificar se passe encriptada é igual ao json
-    let jsonData = require('./user.json');
+    let filePath = "./users/" + username + ".json";
+    let jsonData = require(filePath);
     console.log(jsonData);
 
     if (!jsonData || jsonData.username == null || !await checkPassword(password, jsonData.passwordDigest)) // local authentication
@@ -49,10 +52,8 @@ async function Login(password, sender) {
     })
 
     console.log(result.data);
-
     jsonData.token = result.data.token;
-
-    fs.writeFileSync('user.json', JSON.stringify(jsonData));
+    fs.writeFileSync(filePath, JSON.stringify(jsonData));
 }
 
 module.exports = {Register, Login}
