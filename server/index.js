@@ -76,7 +76,7 @@ app.get("/nrt", authentication.authenticateMiddleware, (req, res) => {
     return res.status(200).json(opResult);
 })
 
-app.post("/register",async (req,res) => {
+app.post("/register", async (req, res) => {
     const { username, password, oneTimeId } = req.body;
 
     try {
@@ -124,13 +124,22 @@ app.listen(port, async () => {
 
 var stdin = process.openStdin();
 
-stdin.addListener("data", function(input) {
-    /*let inputArray = input.toString().trim().split(" ");
-    console.log(inputArray);
+stdin.addListener("data", function (input) {
+    let inputArray = input.toString().trim().split(" ");
     if (inputArray[0] == "adduser") {
-        if (inputArray.length == 2)
-            preRegistration.addUser(inputArray[1], 1);
-        else if (inputArray.length == 3)
-            preRegistration.addUser(inputArray[1], parseInt(inputArray[2]));
-    }*/
+        if (inputArray.length < 3) {
+            console.error("Usage: adduser <Name> [Name]* <clearance_level>");
+            return;
+        }
+        let name = "";
+        for (let i = 1; i < inputArray.length - 1; ++i) {
+            name += inputArray[i] + " ";
+        }
+        name = name.substr(0, name.length-1);
+        try {
+            preRegistration.addUser(name, parseInt(inputArray[inputArray.length-1]));
+        } catch (error) {
+            console.error("Clearance level must be an integer!");
+        }
+    }
 });

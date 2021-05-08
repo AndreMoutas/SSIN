@@ -50,11 +50,9 @@ async function RequestNrt() {
 
 app.post("/message",async (req,res) => {
     console.log(req.body);
-    //const { content } = req.body;
-
+    
     try {
-        //console.log("Content: " + content);
-        return res.status(200).json({ token: "ola"});
+        return res.status(200);
     }
     catch (err) {
         console.error(err)
@@ -80,7 +78,7 @@ stdin.addListener("data", function(input) {
             login(inputArray[1], inputArray[2]); 
             break;
         case "message":
-            sendMessage(inputArray[1], "ping");
+            sendMessage(inputArray[1], inputArray.slice(2).join(' '));
             break;
     }
 });
@@ -103,7 +101,6 @@ async function sendMessage(receiver, message) {
     } catch (error) {
         console.error(error);
     }
-    
 
     if (result.status != 200) {
         console.error("Request failed!"); 

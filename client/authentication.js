@@ -16,11 +16,10 @@ function checkPassword(password, passwordDigest) {
 async function Register(username, oneTimeId, password) {
 
     const result = await axios.post("http://localhost:3000/register", {
-            username: username,
-            oneTimeId: oneTimeId,
-            password: password
+        username: username,
+        oneTimeId: oneTimeId,
+        password: password
     });
-
 
     const token = result.data.token;
 
@@ -33,7 +32,7 @@ async function Register(username, oneTimeId, password) {
     console.log(user);
     let filePath = "./users/" + username + ".json";
     fs.writeFileSync(filePath, JSON.stringify(user));
- }
+}
 
 async function Login(username, password, sender) {
     // verificar se passe encriptada é igual ao json
@@ -45,7 +44,7 @@ async function Login(username, password, sender) {
         return console.error("Wrong password");
 
     // mandar pedido
-    const result = await axios.post("http://localhost:3000/login",{
+    const result = await axios.post("http://localhost:3000/login", {
         username: jsonData.username,
         password: password,
         sender: sender
@@ -56,4 +55,4 @@ async function Login(username, password, sender) {
     fs.writeFileSync(filePath, JSON.stringify(jsonData));
 }
 
-module.exports = {Register, Login}
+module.exports = { Register, Login }
