@@ -50,7 +50,7 @@ async function RequestNrt() {
 
 app.post("/message",async (req,res) => {
     console.log(req.body);
-    
+
     try {
         return res.status(200);
     }
@@ -108,8 +108,6 @@ async function sendMessage(receiver, message) {
     }
     
     let clientInfo = result.data.clientInfo;
-
-    console.log(clientInfo);
     
     // Message the other client directly
     await axios.post(`http://${clientInfo}/message`, {
