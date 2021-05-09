@@ -19,14 +19,15 @@ function checkPassword(password, passwordDigest) {
 const JWT_SECRET = process.env.JWT_SECRET;
 
 function generateJWT(user) {
-    const jwtBody = { id: user.id, username: user.username };
+    const jwtBody = {
+        id: user.id,
+        username: user.username,
+        endpoint: user.endpoint
+    };
 
-    const token = jwt.sign({
-        exp: Math.floor(Date.now() / 1000) + (60 * 60), // 1 Hr expiration
+    return jwt.sign({
         user: jwtBody
     }, JWT_SECRET);
-
-    return token;
 }
 
 passport.use('login', new LocalStrategy(
@@ -46,7 +47,7 @@ passport.use('jwt', new JwtStrategy({
             secretOrKey: JWT_SECRET || "secret",
         },
         (jwtPayload, done) => {
-            console.log("Payload:" ,jwtPayload);
+          //  console.log("Payload:" ,jwtPayload);
             db.User.findByPk(jwtPayload.user.id)
                 .then((user) => done(null, user || false))
                 .catch((err) => done(err, false));
@@ -54,26 +55,23 @@ passport.use('jwt', new JwtStrategy({
     )
 );
 
-
-
-/*
-passport.serializeUser((user, done) => {
-    //console.log("Hello from serializeUser")
-    done(null, user.id)
-});
-
-passport.deserializeUser(function(id, done) {
-    //console.log("Hello from deserializeUser")
-    db.User.findByPk(id)
-        .then(user => { done(null, user); })
-        .catch(err => {console.log(err); done(err, null); });
-});
-*/
-
 module.exports = {
     authenticateMiddleware: passport.authenticate("jwt", { session: false }),
 
-    async register(username, oneTimeId, password) {
+    minClearance: (clearanceLevel) => {
+        return (req, res, next) => {
+            if (req.user.clearanceLevel < clearanceLevel)
+                return res.status(403).json("Not enough clearance level: " + req.user.clearanceLevel)
+            return next();
+        }
+    },
+
+    async register(username, oneTimeId, password, endpoint) {
+        if (!username)
+            throw Error('Username must be valid')
+        if (password.length < 6)
+            throw Error('Password is too short')
+
         const user = await db.User.findOne({
             where: { username: username }
         });
@@ -84,20 +82,29 @@ module.exports = {
         if (user.passwordDigest !== null)
             throw Error('User is already registered')
 
+
         await user.update({
-            passwordDigest: await hashPassword(password)
+            passwordDigest: await hashPassword(password),
+            endpoint: endpoint
         })
 
         return generateJWT(user);
     },
 
-    async login(username, password, req, res) {
+    async login(username, password, endpoint, req, res) {
+        if (!username || !password)
+            throw Error("Invalid username/password")
 
         return new Promise((resolve, reject) => {
-            passport.authenticate("login", {}, (err, user) => {
+            if (!username || !password)
+                reject("Invalid username/password")
+            passport.authenticate("login", {}, async (err, user) => {
                 if (err)
                     reject(err);
-                else resolve(generateJWT(user));
+                else {
+                    await user.update({ endpoint: endpoint })
+                    resolve(generateJWT(user));
+                }
             })(req, res);
         })
 

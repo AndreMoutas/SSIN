@@ -14,7 +14,7 @@ function generateOneTimeId() {
 
 function generateUsername(fullName) {
     let username = fullName.replace(/ /g, "");
-    return username.substr(0, Math.min(7, username.length - 1));
+    return username.substr(0, Math.min(8, username.length));
 }
 
 module.exports = {

@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        passwordDigest: DataTypes.TEXT
+        passwordDigest: DataTypes.TEXT,
+        endpoint: DataTypes.TEXT,
     }, {
         sequelize,
         tableName: "users",

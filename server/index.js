@@ -3,8 +3,18 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Create app
+const axios = require("axios");
+const fs = require("fs");
+const https = require("https");
 const express = require("express");
 const app = express();
+const privateKey  = fs.readFileSync('certs/selfsigned.key', 'utf8');
+const certificate = fs.readFileSync('certs/selfsigned.crt', 'utf8');
+
+const httpsServer = https.createServer({
+    key: privateKey,
+    cert: certificate
+}, app);
 
 // Connect to database
 const db = require("./database/index");
@@ -17,71 +27,32 @@ app.use(bodyParser.json());
 const preRegistration = require("./services/pre-registration");
 const operations = require("./services/operations");
 const authentication = require("./services/authentication");
-const storage = require("./storage/Storage");
-
-/*
-// Setup session and passport
-// Se calhar não vamos precisar disto afinal
-const session = require("express-session");
-const SequelizeStore = require("connect-session-sequelize")(session.Store);
-const passport = require('passport')
-
-const store = new SequelizeStore({
-    db: db.sequelize,
-    checkExpirationInterval: 15 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
-    expiration: 24 * 60 * 60 * 1000  // The maximum age (in milliseconds) of a valid session.
-});
-app.use(session({
-    store: store,
-    resave: false,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET,
-    name: 'sessionId'
-}));
-app.use(passport.initialize({}));
-app.use(passport.session({}));
-
- */
-
 
 // Enable logger
 const logger = require('morgan');
 app.use(logger('dev'));
 
 // Routes
-app.get("/sqrt", authentication.authenticateMiddleware, (req, res) => {
-    if (req.user.clearanceLevel < 1)
-        return res.status(403).json("Not enough clearance level: " + req.user.clearanceLevel)
-
-    const number = req.query.number || 0;
-    const opResult = operations.calculateSquareRoot(number);
+app.get("/sqrt", authentication.authenticateMiddleware, authentication.minClearance(1), (req, res) => {
+    const opResult = operations.calculateSquareRoot(req.query.number || 0);
     return res.status(200).json(opResult);
 })
 
-app.get("/cbrt", authentication.authenticateMiddleware, (req, res) => {
-    if (req.user.clearanceLevel < 2)
-        return res.status(403).json("Not enough clearance level: " + req.user.clearanceLevel)
-
-    const number = req.query.number || 0;
-    const opResult = operations.calculateCubitRoot(number);
+app.get("/cbrt", authentication.authenticateMiddleware, authentication.minClearance(2), (req, res) => {
+    const opResult = operations.calculateCubitRoot(req.query.number || 0);
     return res.status(200).json(opResult);
 })
 
-app.get("/nrt", authentication.authenticateMiddleware, (req, res) => {
-    if (req.user.clearanceLevel < 3)
-        return res.status(403).json("Not enough clearance level: " + req.user.clearanceLevel)
-
-    const number = req.query.number || 0;
-    const root = req.query.root || 0;
-    const opResult = operations.calculateNRoot(number, root);
+app.get("/nrt", authentication.authenticateMiddleware, authentication.minClearance(3), (req, res) => {
+    const opResult = operations.calculateNRoot(req.query.number || 0, req.query.root || 0);
     return res.status(200).json(opResult);
 })
 
 app.post("/register", async (req, res) => {
-    const { username, password, oneTimeId } = req.body;
+    const { username, password, oneTimeId, endpoint } = req.body;
 
     try {
-        const token = await authentication.register(username, oneTimeId, password);
+        const token = await authentication.register(username, oneTimeId, password, endpoint);
         return res.status(200).json({ token: token });
     }
     catch (err) {
@@ -90,11 +61,11 @@ app.post("/register", async (req, res) => {
     }
 })
 
+
 app.post("/login", async (req, res) => {
-    const { username, password, sender } = req.body;
+    const { username, password, endpoint } = req.body;
     try {
-        const token = await authentication.login(username, password, req, res); // !
-        storage.addClientInfo(username, "localhost", sender);
+        const token = await authentication.login(username, password, endpoint, req, res); // !
         return res.json({ token: token });
     }
     catch (err) {
@@ -103,18 +74,24 @@ app.post("/login", async (req, res) => {
     }
 })
 
-app.post("/clientInfo", authentication.authenticateMiddleware, async (req, res) => {
-    const { username } = req.body;
-    
+
+app.get("/clientInfo", authentication.authenticateMiddleware, authentication.minClearance(1), async (req, res) => {
+    const { username } = req.query;
+
     try {
-        let clientInfo = storage.getClientInfo(username);
-        return res.status(200).json({ clientInfo: clientInfo });
+        const user = await db.User.findOne({ where: { username } });
+        const endpoint = (user || {}).endpoint;
+
+        await axios.get(`http://${endpoint}/ping`);
+
+        return res.status(200).json({ endpoint: endpoint });
     }
     catch (err) {
-        console.error(err)
-        return res.status(401).json(err.message);
+        return res.status(200).json(null);
     }
 })
+
+
 
 // Error handler
 app.use(function (err, req, res, next) {
@@ -127,19 +104,22 @@ app.use(function (err, req, res, next) {
 // Run the app
 const port = process.env.APP_PORT || 3001;
 
-
-app.listen(port, async () => {
+httpsServer.listen(port, async () => {
     console.log(`Server running on ${process.env.NODE_ENV} mode, at port ${port}.`)
+
+    console.log((await db.User.findAll()).map(user => user.toJSON()))
     await db.connect();
-    // await db.reset();
-    // await store.sync();
+  // await db.reset();
+
 })
 
-var stdin = process.openStdin();
+
+// Command line
+const stdin = process.openStdin();
 
 stdin.addListener("data", function (input) {
     let inputArray = input.toString().trim().split(" ");
-    if (inputArray[0] == "adduser") {
+    if (inputArray[0] === "adduser") {
         if (inputArray.length < 3) {
             console.error("Usage: adduser <Name> [Name]* <clearance_level>");
             return;
@@ -149,6 +129,8 @@ stdin.addListener("data", function (input) {
             name += inputArray[i] + " ";
         }
         name = name.substr(0, name.length-1);
+
+
         try {
             preRegistration.addUser(name, parseInt(inputArray[inputArray.length-1]));
         } catch (error) {

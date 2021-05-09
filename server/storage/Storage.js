@@ -1,10 +1,11 @@
 let clientInfo = {};
 
 module.exports = {
-    addClientInfo(username, ip, port) {
-        clientInfo[username] = `${ip}:${port}`;
+    addClientInfo(username, endpoint) {
+        clientInfo[username] = endpoint;
         console.log(clientInfo);
     },
+
     getClientInfo(username) {
         return clientInfo[username];
     }
