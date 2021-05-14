@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import axios from 'axios';
 
 class App extends Component {
     constructor(props) {
@@ -9,8 +10,8 @@ class App extends Component {
         this.state = { apiResponse: "" };
     }
 
-    callAPI() {
-        fetch("http://localhost:9000/testAPI")
+    async callAPI() {
+        fetch("http://localhost:2000/testAPI")
             .then(res => res.text())
             .then(res => this.setState({ apiResponse: res }))
             .catch(err => err);
