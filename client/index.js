@@ -2,10 +2,12 @@ const authentication = require("./api/authentication");
 const session = require("./api/session");
 const messenger = require("./api/messenger");
 const roots = require("./api/roots");
+var cors = require("cors");
 
 // Create message server
 const express = require("express");
 const app = express();
+app.use(cors());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,6 +24,10 @@ app.use((req, res, next) => {
 app.get("/ping", async (req, res) => {
     res.status(200).send();
 })
+
+app.get("/testAPI", async function(req, res, next) {
+    res.send("API is working properly");
+});
 
 app.post("/message",async (req,res) => {
     console.log("Received message from " + req.body.username);
