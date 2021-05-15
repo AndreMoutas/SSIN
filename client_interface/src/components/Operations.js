@@ -67,7 +67,6 @@ class Operations extends Component {
     render() {
         return (
             <div className="App" style={styles.div}>
-                <img src={logo} alt="Logo" style={{height: '100px'}}/>;
                 <Row style={styles.row}>
                     <Form>
                         <Form.Group controlId="number">
