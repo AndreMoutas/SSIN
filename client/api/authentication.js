@@ -2,7 +2,7 @@ const axios = require("./axios")
 const session = require("./session");
 
 exports.Register = async (username, password, oneTimeId, sender) => {
-    const result = await axios.post("https://localhost:3000/register", {
+    const result = await axios.post("https://localhost:5000/register", {
         username: username,
         oneTimeId: oneTimeId,
         password: password,
@@ -20,7 +20,7 @@ exports.Login = async (username, password, sender) => {
     if (!decrypted) {
         console.error("Wrong password, could not decrypt user data, performing server login");
 
-        const result = await axios.post("https://localhost:3000/login", {
+        const result = await axios.post("https://localhost:5000/login", {
             username: username,
             password: password,
             endpoint: sender
