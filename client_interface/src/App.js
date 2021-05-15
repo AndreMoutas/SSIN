@@ -14,6 +14,10 @@ class App extends Component {
         super(props);
     }
 
+    componentDidMount() {
+        document.body.style.backgroundColor = "black";
+    }
+
     render() {
         return (
             <Router>
