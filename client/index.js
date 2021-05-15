@@ -17,8 +17,28 @@ app.get("/ping", async (req, res) => {
     res.status(200).send();
 })
 
-app.get("/testAPI", async function(req, res, next) {
+app.get("/", async function(req, res) {
     res.send("API is working properly");
+});
+
+app.get("/testAPI", async function(req, res) {
+    res.send("API is working properly");
+});
+
+app.get("/sqrt", async function(req, res) {
+    console.log(req.params.number);
+    let result = await roots.RequestSqrt(4);
+    res.send(result.toString());
+});
+
+app.get("/cbrt", async function(req, res) {
+    let result = await roots.RequestCbrt(4);
+    res.send(result.toString());
+});
+
+app.get("/nrt", async function(req, res) {
+    let result = await roots.RequestNrt(4);
+    res.send(result.toString());
 });
 
 app.post("/message",async (req,res) => {

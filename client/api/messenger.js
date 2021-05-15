@@ -19,7 +19,7 @@ async function getClientEndpoint(username) {
     console.log("Asking the server!")
 
     // Ask the server for the user's endpoint
-    const result = await axios.get("https://localhost:3000/clientInfo", {
+    const result = await axios.get("https://localhost:5000/clientInfo", {
         params: {username: username},
     })
 
