@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { Button, Form, Row } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../images/logo.png';
 
 class Operations extends Component {
     constructor(props) {
@@ -34,10 +33,6 @@ class Operations extends Component {
             .then(res => res.text())
             .then(res => this.setState({ apiResponse: res }))
             .catch(err => err);
-    }
-
-    componentDidMount() {
-        document.body.style.backgroundColor = "black";
     }
 
     async requestSqrt(e) {
