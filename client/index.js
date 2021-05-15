@@ -34,18 +34,17 @@ app.get("/testAPI", async function(req, res) {
 });
 
 app.get("/sqrt", async function(req, res) {
-    console.log(req.params.number);
-    let result = await roots.RequestSqrt(4);
+    let result = await roots.RequestSqrt(req.query.number);
     res.send(result.toString());
 });
 
 app.get("/cbrt", async function(req, res) {
-    let result = await roots.RequestCbrt(4);
+    let result = await roots.RequestCbrt(req.query.number);
     res.send(result.toString());
 });
 
 app.get("/nrt", async function(req, res) {
-    let result = await roots.RequestNrt(4);
+    let result = await roots.RequestNrt(req.query.number, req.query.root);
     res.send(result.toString());
 });
 

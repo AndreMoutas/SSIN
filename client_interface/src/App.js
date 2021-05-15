@@ -1,7 +1,7 @@
 
 import React, { Component } from "react";
 import { Button, Form, Row } from 'react-bootstrap';
-//import logo from "./logo.svg";
+
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './images/logo.png';
@@ -12,13 +12,18 @@ class App extends Component {
         super(props);
         this.state = { 
             apiResponse: "", 
-            sqrt: "3", 
+            sqrt: "", 
             cbrt: "", 
             nrt: "",
             sqrtOperand: "",
+            cbrtOperand: "",
+            nrtOperand: "",
+            nrtRoot: "",
         };
         this.callAPI = this.callAPI.bind(this);
         this.requestSqrt = this.requestSqrt.bind(this);
+        this.requestCbrt = this.requestCbrt.bind(this);
+        this.requestNrt = this.requestNrt.bind(this);
     }
 
     handle() {
@@ -40,10 +45,25 @@ class App extends Component {
 
     async requestSqrt(e) {
         e.preventDefault();
-        console.log(this.state.sqrtOperand);
-        fetch(`http://localhost:2000/sqrt?number=9`)
+        fetch(`http://localhost:2000/sqrt?number=${this.state.sqrtOperand}`)
             .then(res => res.text())
             .then(res => { this.setState({ sqrt: res }) })
+            .catch(err => err);
+    } 
+
+    async requestCbrt(e) {
+        e.preventDefault();
+        fetch(`http://localhost:2000/cbrt?number=${this.state.cbrtOperand}`)
+            .then(res => res.text())
+            .then(res => { this.setState({ cbrt: res }) })
+            .catch(err => err);
+    } 
+
+    async requestNrt(e) {
+        e.preventDefault();
+        fetch(`http://localhost:2000/nrt?number=${this.state.nrtOperand}&root=${this.state.nrtRoot}`)
+            .then(res => res.text())
+            .then(res => { this.setState({ nrt: res }) })
             .catch(err => err);
     } 
 
@@ -55,7 +75,7 @@ class App extends Component {
                     <Form>
                         <Form.Group controlId="number">
                             <Form.Label>Number</Form.Label>
-                            <Form.Control type="number" placeholder="Enter number" value={this.state.val} onChange={e => this.setState({ sqrtOperand: e.target.value })} />
+                            <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ sqrtOperand: e.target.value })} />
                             <Form.Text className="text-muted">
                                 Operand of the square root operation
                             </Form.Text>
@@ -72,13 +92,40 @@ class App extends Component {
                     <Form>
                         <Form.Group controlId="number">
                             <Form.Label>Number</Form.Label>
-                            <Form.Control type="number" placeholder="Enter number" />
+                            <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ cbrtOperand: e.target.value })} />
                             <Form.Text className="text-muted">
-                                Operand of the square root operation
+                                Operand of the cubic root operation
                             </Form.Text>
                         </Form.Group>
 
-                        <Button variant="dark" type="submit">
+                        <p className="App-intro">{this.state.cbrt}</p>
+
+                        <Button variant="dark" type="submit" onClick={this.requestCbrt}>
+                            Calculate
+                        </Button>
+                    </Form>
+                </Row>
+                <Row style={styles.row}>
+                    <Form>
+                        <Form.Label>N Root Operation</Form.Label>
+
+                        <Form.Group controlId="number">
+                            <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ nrtOperand: e.target.value })} />
+                            <Form.Text className="text-muted">
+                                Operand of the n root operation
+                            </Form.Text>
+                        </Form.Group>
+
+                        <Form.Group controlId="root">
+                            <Form.Control type="number" placeholder="Enter root" onChange={e => this.setState({ nrtRoot: e.target.value })} />
+                            <Form.Text className="text-muted">
+                                Root of the n root operation
+                            </Form.Text>
+                        </Form.Group>
+
+                        <p className="App-intro">{this.state.nrt}</p>
+
+                        <Button variant="dark" type="submit" onClick={this.requestNrt}>
                             Calculate
                         </Button>
                     </Form>
