@@ -4,7 +4,6 @@ import { Button, Form, Row } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../images/logo.png';
-import SideBar from './SideBar'
 
 class Operations extends Component {
     constructor(props) {
@@ -68,7 +67,6 @@ class Operations extends Component {
     render() {
         return (
             <div className="App" style={styles.div}>
-                <SideBar />
                 <img src={logo} alt="Logo" style={{height: '100px'}}/>;
                 <Row style={styles.row}>
                     <Form>
