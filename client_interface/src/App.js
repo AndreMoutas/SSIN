@@ -10,7 +10,13 @@ import logo from './images/logo.png';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = { apiResponse: "", sqrt: "3", cbrt: "", nrt: "" };
+        this.state = { 
+            apiResponse: "", 
+            sqrt: "3", 
+            cbrt: "", 
+            nrt: "",
+            sqrtOperand: "",
+        };
         this.callAPI = this.callAPI.bind(this);
         this.requestSqrt = this.requestSqrt.bind(this);
     }
@@ -34,7 +40,7 @@ class App extends Component {
 
     async requestSqrt(e) {
         e.preventDefault();
-        console.log(e.target.value);
+        console.log(this.state.sqrtOperand);
         fetch(`http://localhost:2000/sqrt?number=9`)
             .then(res => res.text())
             .then(res => { this.setState({ sqrt: res }) })
@@ -49,7 +55,7 @@ class App extends Component {
                     <Form>
                         <Form.Group controlId="number">
                             <Form.Label>Number</Form.Label>
-                            <Form.Control type="email" placeholder="Enter number"/>
+                            <Form.Control type="number" placeholder="Enter number" value={this.state.val} onChange={e => this.setState({ sqrtOperand: e.target.value })} />
                             <Form.Text className="text-muted">
                                 Operand of the square root operation
                             </Form.Text>
@@ -66,7 +72,7 @@ class App extends Component {
                     <Form>
                         <Form.Group controlId="number">
                             <Form.Label>Number</Form.Label>
-                            <Form.Control type="email" placeholder="Enter number" />
+                            <Form.Control type="number" placeholder="Enter number" />
                             <Form.Text className="text-muted">
                                 Operand of the square root operation
                             </Form.Text>
