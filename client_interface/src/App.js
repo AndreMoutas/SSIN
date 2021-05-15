@@ -5,6 +5,8 @@ import { Button, Form, Row } from 'react-bootstrap';
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './images/logo.png';
+import { ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import 'react-pro-sidebar/dist/css/styles.css';
 //import axios from 'axios';
 
 class App extends Component {
@@ -70,7 +72,16 @@ class App extends Component {
     render() {
         return (
             <div className="App" style={styles.div}>
-                <img src={logo} alt="Logo" />;
+                <ProSidebar>
+                    <Menu iconShape="square">
+                        <MenuItem >Authentication</MenuItem>
+                        <SubMenu title="Features" >
+                        <MenuItem>Operations</MenuItem>
+                        <MenuItem>Messages</MenuItem>
+                        </SubMenu>
+                    </Menu>
+                    </ProSidebar>
+                <img src={logo} alt="Logo" style={{height: '100px'}}/>;
                 <Row style={styles.row}>
                     <Form>
                         <Form.Group controlId="number">
