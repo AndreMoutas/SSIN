@@ -3,7 +3,7 @@ const authentication = require("./authentication")
 
 async function getClientEndpoint(username) {
     const knownEndpoint = authentication.SessionGetEndpoint(username)
-
+    /*
     if (knownEndpoint) {
         try {
             // Ping succeeded, so endpoint is valid
@@ -14,7 +14,7 @@ async function getClientEndpoint(username) {
             // Ping failed, so endpoint is likely invalid
             authentication.SessionRemoveEndpoint(username);
         }
-    }
+    }*/
 
     console.log("Asking the server!")
 
@@ -23,7 +23,7 @@ async function getClientEndpoint(username) {
         params: {username: username},
     })
 
-
+    console.log(result.data.encryptionKey);
     if (result.data === null)
         return null
     const endpoint = result.data.endpoint;

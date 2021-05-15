@@ -1,5 +1,6 @@
 const db = require("../database");
 
+
 const oneTimeIdLength = 12;
 
 function generateOneTimeId() {

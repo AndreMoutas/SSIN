@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         username: {
             type: DataTypes.TEXT,
             allowNull: false,
+            unique: true,
         },
         clearanceLevel: {
             type: DataTypes.INTEGER,

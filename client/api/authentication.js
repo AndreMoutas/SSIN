@@ -81,10 +81,9 @@ const currentSession = { session: null, hashedPassword: null }
 function readSessionFile(username, password) {
     const hashedPassword = hashPassword(password);
 
-    const encrypted = fs.readFileSync("./users/" + username, "base64")
-    const decrypted = decryptWithPassword(encrypted, hashedPassword);
-
     try {
+        const encrypted = fs.readFileSync("./users/" + username, "base64")
+        const decrypted = decryptWithPassword(encrypted, hashedPassword);
         currentSession.session = JSON.parse(decrypted);
         currentSession.hashedPassword = hashedPassword
 
