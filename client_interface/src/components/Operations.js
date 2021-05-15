@@ -109,7 +109,7 @@ class Operations extends Component {
 
                         <Form.Group controlId="root">
                             <Form.Control type="number" placeholder="Enter root" onChange={e => this.setState({ nrtRoot: e.target.value })} />
-                            <Form.Text className="text-muted">
+                            <Form.Text className="text-dark">
                                 Root of the n root operation
                             </Form.Text>
                         </Form.Group>

@@ -1,8 +1,6 @@
 import React from "react";
-import { ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { Link } from 'react-router-dom'
 import 'react-pro-sidebar/dist/css/styles.css';
-import { Button, Form, Navbar, Nav, FormControl } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import logo from '../images/logo.png';
 
 
@@ -22,7 +20,6 @@ const styles = {
     navOption: {
         marginLeft: '30px',
         fontSize: '18px',
-
     }
 }
 

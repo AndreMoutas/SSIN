@@ -2,7 +2,9 @@ import React from "react";
 
 function Messages() {
     return (
-        "Placeholder for messages page"
+        <div style={{color:'white'}}>
+            Placeholder for messages page
+        </div>
     );
 }
 
