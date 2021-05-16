@@ -5,8 +5,8 @@ const fs = require("fs");
 const axios = require("axios").create({
     httpsAgent: new https.Agent({
         ca: fs.readFileSync('certs/trustedserver.crt'),
-        keepAlive: false,
-        rejectUnauthorized: false,
+       // keepAlive: false,
+      //  rejectUnauthorized: false,
     })
 });
 

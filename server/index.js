@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 const preRegistration = require("./services/pre-registration");
 const operations = require("./services/operations");
 const authentication = require("./services/authentication");
-const messaging = require("./services/messaging");
+const messaging = require("./services/messagingKeys");
 
 // Enable logger
 const logger = require('morgan');
@@ -76,22 +76,23 @@ app.post("/login", async (req, res) => {
 })
 
 
-app.get("/clientInfo", authentication.authenticateMiddleware, authentication.minClearance(1), async (req, res) => {
+app.get("/clientKeys", authentication.authenticateMiddleware, authentication.minClearance(1), async (req, res) => {
     const { username } = req.query;
 
     try {
         const user = await db.User.findOne({ where: { username } });
-        const endpoint = (user || {}).endpoint;
-        await axios.get(`http://${endpoint}/ping`);
-        const encryptionKey = await messaging.boom(req.user, user);
-        return res.status(200).json(
-            {
-                endpoint: endpoint,
-                encryptionKey: encryptionKey,
-            });
+        const url = user ? user.endpoint : "";
+
+        await axios.get(`http://${url}/ping`);
+
+        return res.status(200).json({
+            url: url,
+            encryptionKey: (await messaging.getMessagingKeys(req.user, user)).encryptionKey, // Keys for Sending to user
+            decryptionKey: (await messaging.getMessagingKeys(user, req.user)).decryptionKey, // Keys for Receiving from user
+        });
     }
     catch (err) {
-        return res.status(200).json(null);
+        return res.status(201).json(null);
     }
 })
 
@@ -111,8 +112,8 @@ httpsServer.listen(port, async () => {
     console.log(`Server running on ${process.env.NODE_ENV} mode, at port ${port}.`)
 
     // console.log((await db.User.findAll()).map(user => user.toJSON()))
+    // await db.reset();
     await db.connect();
-    //await db.reset();
 
 })
 

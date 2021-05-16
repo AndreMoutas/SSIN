@@ -1,57 +1,91 @@
 const axios = require("./axios");
-const authentication = require("./authentication")
+const session = require("./session")
+const crypto = require('crypto');
 
 async function getClientEndpoint(username) {
-    const knownEndpoint = authentication.SessionGetEndpoint(username)
-    /*
+    const knownEndpoint = session.SessionGetEndpoint(username)
     if (knownEndpoint) {
         try {
             // Ping succeeded, so endpoint is valid
-            await axios.get(`http://${knownEndpoint}/ping`);
-
+            await axios.get(`http://${knownEndpoint.url}/ping`);
             return knownEndpoint;
         } catch (err) {
             // Ping failed, so endpoint is likely invalid
-            authentication.SessionRemoveEndpoint(username);
+            session.SessionRemoveEndpoint(username);
         }
-    }*/
+    }
 
     console.log("Asking the server!")
 
-    // Ask the server for the user's endpoint
-    const result = await axios.get("https://localhost:3000/clientInfo", {
-        params: {username: username},
+    // Ask the server for the user's endpoint + keys
+    const result = await axios.get("https://localhost:3000/clientKeys", {
+        params: { username: username },
     })
 
-    console.log(result.data.encryptionKey);
     if (result.data === null)
         return null
-    const endpoint = result.data.endpoint;
 
-    authentication.SessionAddEndpoint(username, endpoint);
-    return endpoint;
+    session.SessionAddEndpoint(username, result.data);
+
+    return result.data;
+}
+
+
+function encryptMessage(message, encryptionKey) {
+    return crypto.publicEncrypt(encryptionKey, Buffer.from(message)).toString("base64");
+}
+
+function decryptMessage(encrypted, decryptionKey) {
+    try {
+        return crypto.privateDecrypt(decryptionKey, Buffer.from(encrypted, "base64")).toString("utf-8");
+    } catch (err) {
+        console.log("Failed message decryption.")
+        return null;
+    }
 }
 
 exports.send = async (receiver, message) => {
-    const endpoint = await getClientEndpoint(receiver);
+    if (!message)
+        return console.error("Tried to send empty message")
 
+    const endpoint = await getClientEndpoint(receiver, true);
     if (endpoint === null)
         return console.error("User is likely offline.")
 
     // Message the other client directly
-    await axios.post(`http://${endpoint}/message`, {
-        text: message,
-        username: authentication.GetCurrentSession().username
+    await axios.post(`http://${endpoint.url}/message`, {
+        content: encryptMessage(message, endpoint.encryptionKey),
+        username: session.GetCurrentSession().username,
+        nonce: crypto.randomBytes(256).toString("base64")
     });
 }
 
-exports.displayAll = () => {
-    const session = authentication.GetCurrentSession();
+exports.receive = async (sender, encrypted, nonce) => {
+    if (!encrypted)
+        return console.error("Tried to receive empty message");
 
-    if (session.messages.length === 0)
-        return console.log("You have no messages.");
-    session.messages.slice().reverse().forEach((message) => {
+    const endpoint = await getClientEndpoint(sender, false);
+    if (endpoint === null)
+        return console.error("User is likely offline (should not happen if you're receiving a message)")
+
+    const decrypted = decryptMessage(encrypted, endpoint.decryptionKey);
+
+    if (decrypted)
+        session.SessionAddMessage(sender, encrypted, endpoint.decryptionKey, nonce)
+
+    return decrypted;
+}
+
+exports.displayAll = () => {
+    const currSession = session.GetCurrentSession();
+
+    if (!currSession)
+        return console.error("You are not logged in.");
+    if (currSession.messages.length === 0)
+        return console.error("You have no messages.");
+    currSession.messages.slice().reverse().forEach((message) => {
         console.log(`- Message From ${message.from}, in ${new Date(message.timestamp).toTimeString()}`)
-        console.log(`${message.message}`)
+        console.log(`${decryptMessage(message.encrypted, message.decryptionKey)}`)
+        console.log()
     })
 }

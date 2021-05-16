@@ -1,8 +1,9 @@
 const authentication = require("./api/authentication");
-
+const session = require("./api/session");
+const messenger = require("./api/messenger");
+const roots = require("./api/roots");
 
 // Create message server
-
 const express = require("express");
 const app = express();
 
@@ -12,16 +13,22 @@ app.use(bodyParser.json());
 
 const port = process.argv[2] || 2000;
 
+app.use((req, res, next) => {
+    if (session.GetCurrentSession())
+        next();
+    else console.error("Received a request while not logged in. Ignoring.")
+});
+
 app.get("/ping", async (req, res) => {
     res.status(200).send();
 })
 
 app.post("/message",async (req,res) => {
-    console.log(req.body);
+    console.log("Received message from " + req.body.username);
 
-    authentication.SessionAddMessage(req.body.username, req.body.text)
+    console.log(await messenger.receive(req.body.username, req.body.content, req.body.nonce));
 
-    return res.status(200).json("Got your message: " + req.body.text);
+    return res.status(200).send();
 })
 
 app.listen(port, async () => {
@@ -30,9 +37,6 @@ app.listen(port, async () => {
 
 
 // Create command line
-const roots = require("./api/roots");
-const messenger = require("./api/messenger");
-
 const stdin = process.openStdin();
 
 stdin.addListener("data", function(input) {
@@ -61,8 +65,11 @@ stdin.addListener("data", function(input) {
         case "message":
             messenger.send(inputArray[1], inputArray.slice(2).join(' ')).catch(printErrorMessage);
             break;
-        case "displaymessages":
+        case "inbox":
             messenger.displayAll();
+            break;
+        case "session":
+            console.log(JSON.stringify(session.GetCurrentSession(),null, 2))
             break;
         default:
             console.error("Unknown command: " + command)
