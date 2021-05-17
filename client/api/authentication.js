@@ -23,18 +23,25 @@ function decryptWithPassword(text, password) {
 
 
 exports.Register = async (username, password, oneTimeId, sender) => {
-    const result = await axios.post("https://localhost:5000/register", {
-        username: username,
-        oneTimeId: oneTimeId,
-        password: password,
-        endpoint: sender
-    })
+    let result;
+    try {
+        result = await axios.post("https://localhost:5000/register", {
+            username: username,
+            oneTimeId: oneTimeId,
+            password: password,
+            endpoint: sender
+        })
+    } catch (error) {
+        return 401;
+    }
 
     // Save token encrypted
     createNewSession(username, password, result.data.token);
     SetAutomaticHeader(result.data.token);
 
     console.log(currentSession)
+
+    return 200;
 }
 
 exports.Login = async (username, password, sender) => {
@@ -43,11 +50,17 @@ exports.Login = async (username, password, sender) => {
     if (!decrypted) {
         console.error("Wrong password, could not decrypt user data, performing server login");
 
-        const result = await axios.post("https://localhost:5000/login", {
-            username: username,
-            password: password,
-            endpoint: sender
-        })
+        let result;
+
+        try {
+            result = await axios.post("https://localhost:5000/login", {
+                username: username,
+                password: password,
+                endpoint: sender
+            })
+        } catch (error) {
+            return 401;
+        }
 
         createNewSession(username, password, result.data.token);
         SetAutomaticHeader(result.data.token);
@@ -57,6 +70,8 @@ exports.Login = async (username, password, sender) => {
         console.log("Successful local login, here is your session info: ", currentSession)
         SetAutomaticHeader(decrypted.token);
     }
+
+    return 200;
 }
 
 
@@ -81,10 +96,11 @@ const currentSession = { session: null, hashedPassword: null }
 function readSessionFile(username, password) {
     const hashedPassword = hashPassword(password);
 
-    const encrypted = fs.readFileSync("./users/" + username, "base64")
-    const decrypted = decryptWithPassword(encrypted, hashedPassword);
-
+    
     try {
+        const encrypted = fs.readFileSync("./users/" + username, "base64");
+        const decrypted = decryptWithPassword(encrypted, hashedPassword);
+
         currentSession.session = JSON.parse(decrypted);
         currentSession.hashedPassword = hashedPassword
 

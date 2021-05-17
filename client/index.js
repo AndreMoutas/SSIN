@@ -40,6 +40,18 @@ app.get("/nrt", async function(req, res) {
     res.send(result.toString());
 });
 
+app.post("/login", async function(req, res) {
+    const { username, password } = req.body;
+    let status = await authentication.Login(username, password, `localhost:${port}`);
+    return res.status(status).json();
+})
+
+app.post("/register", async function(req, res) {
+    const { username, password, oneTimeID } = req.body;
+    let status = await authentication.Register(username, password, oneTimeID, `localhost:${port}`);
+    return res.status(status).json();
+})
+
 app.post("/message",async (req,res) => {
     console.log(req.body);
 
