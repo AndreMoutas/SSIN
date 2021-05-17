@@ -39,7 +39,7 @@ function Register() {
             <Form>
                 <Form.Group controlId="username">
                     <Form.Label style={styles.label}>Username</Form.Label>
-                    <Form.Control value={username} placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} />
+                    <Form.Control value={username} placeholder="Username" onChange={e => setUsername(e.target.value)} />
                 </Form.Group>
 
                 <Form.Group controlId="oneTimeID">
