@@ -1,34 +1,36 @@
 import React, { useState } from "react";
 import { Button, Form, Row } from 'react-bootstrap';
 
-function Login() {
+function Register() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [oneTimeID, setOneTimeID] = useState("");
     const [feedback, setFeedback] = useState("");
 
-    async function handleLogin(e) {
+    async function handleRegister(e) {
         e.preventDefault();
         
-        let body = {username: username, password: password};
-        fetch("http://localhost:2000/login", {
+        let body = {username: username, password: password, oneTimeID: oneTimeID};
+        fetch("http://localhost:2000/register", {
             method: "POST",
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' },
         })
             .then(res => res.status)
-            .then(status => handleLoginResponse(status))
+            .then(status => handleRegisterResponse(status))
             .catch(err => err);
     }
 
-    function handleLoginResponse(status) {
+    function handleRegisterResponse(status) {
         if (status !== 200) {
+            setFeedback("Wrong username or one time ID");
             setPassword("");
-            setFeedback("Wrong username or password");
         } else {
+            setFeedback("Successfully registered!");
             setUsername("");
             setPassword("");
-            setFeedback("Successfully logged in!");
+            setOneTimeID("");
         }
     }
 
@@ -37,7 +39,12 @@ function Login() {
             <Form>
                 <Form.Group controlId="username">
                     <Form.Label style={styles.label}>Username</Form.Label>
-                    <Form.Control value={username} placeholder="Username" onChange={e => setUsername(e.target.value)} />
+                    <Form.Control value={username} placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} />
+                </Form.Group>
+
+                <Form.Group controlId="oneTimeID">
+                    <Form.Label style={styles.label}>One Time ID</Form.Label>
+                    <Form.Control value={oneTimeID} placeholder="One Time ID" onChange={e => setOneTimeID(e.target.value)} />
                 </Form.Group>
 
                 <Form.Group controlId="password">
@@ -45,13 +52,14 @@ function Login() {
                     <Form.Control value={password} type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
                 </Form.Group>
 
+
                 <p>{feedback}</p>
 
                 <Row style={styles.row}>
-                    <Button variant="dark" type="submit" onClick={handleLogin} >
-                        Login
+                    <Button variant="dark" type="submit" onClick={handleRegister} >
+                        Register
                     </Button>
-                    <a style={styles.link} href="/register">Pretende fazer o registo?</a>
+                    <a style={styles.link} href="/">Já possui conta?</a>
                 </Row>
             </Form>
         </div>
@@ -81,4 +89,4 @@ const styles = {
     }
 }
 
-export default Login;
+export default Register;

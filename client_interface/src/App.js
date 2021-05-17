@@ -6,14 +6,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Operations from "./components/Operations";
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Login from "./components/Login";
+import Register from "./components/Register";
 import Messages from "./components/Messages";
 import TopBar from "./components/TopBar";
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         document.body.style.backgroundColor = "black";
     }
@@ -25,6 +22,7 @@ class App extends Component {
                 <Switch>
                     <Route path="/operations" component={Operations}/>
                     <Route path="/messages" component={Messages}/>
+                    <Route path="/register" component={Register}/>
                     <Route path="/" component={Login}/>
                 </Switch>
             </Router>
