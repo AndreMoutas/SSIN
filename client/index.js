@@ -33,6 +33,16 @@ app.get("/testAPI", async function(req, res) {
     res.send("API is working properly");
 });
 
+app.get("/authorization", async function(req, res) {
+    let result;
+    try {
+        result = await roots.RequestSqrt(4);
+    } catch (error) {
+        return res.status(401).json();
+    }
+    return res.status(200).json();
+});
+
 app.get("/sqrt", async function(req, res) {
     let result = await roots.RequestSqrt(req.query.number);
     res.send(result.toString());
