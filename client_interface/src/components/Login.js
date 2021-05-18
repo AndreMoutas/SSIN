@@ -26,9 +26,7 @@ function Login() {
             setPassword("");
             setFeedback("Wrong username or password");
         } else {
-            setUsername("");
-            setPassword("");
-            setFeedback("Successfully logged in!");
+            window.location.reload();
         }
     }
 

@@ -27,10 +27,7 @@ function Register() {
             setFeedback("Wrong username or one time ID");
             setPassword("");
         } else {
-            setFeedback("Successfully registered!");
-            setUsername("");
-            setPassword("");
-            setOneTimeID("");
+            window.location.reload();
         }
     }
 
