@@ -134,7 +134,7 @@ const styles = {
     },
     row: {
         border: '1px solid rgba(0, 0, 0, 0.05)', 
-        borderRadius: '30px',
+        borderRadius: '15px',
         color: 'white',
         backgroundColor: 'darkGray',
         width: '50%',
@@ -147,7 +147,8 @@ const styles = {
         marginTop: '20px',
     },
     labelStyle: {
-        fontWeight: 'bold' 
+        fontWeight: 'bold',
+        fontSize: 18 
     }
 }
 
