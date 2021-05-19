@@ -1,6 +1,7 @@
 import React, { useState, Text } from "react";
 import { Button, Form, Row, Card } from 'react-bootstrap';
 import AppScreen from "./AppScreen";
+import MessageCard from "./MessageCard";
 
 function MyMessages() {
 
@@ -36,36 +37,26 @@ function MyMessages() {
     return (
             <AppScreen title="My Messages">
                 <div style={styles.div}>
-                    <Card style={styles.card}>
-                        <Card.Body>
-                            <Card.Title>John Smith</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
-                            <Card.Text>
-                                Hello William! It's me, John!!
-                            </Card.Text>
-                            <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
-                        </Card.Body>
-                    </Card>
-                    <Card style={styles.card}>
-                        <Card.Body>
-                            <Card.Title>John Smith</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
-                            <Card.Text>
-                                Hello William! It's me, John!!
-                            </Card.Text>
-                            <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
-                        </Card.Body>
-                    </Card>
-                    <Card style={styles.card}>
-                        <Card.Body>
-                            <Card.Title>John Smith</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
-                            <Card.Text>
-                                Hello William! It's me, John!!
-                            </Card.Text>
-                            <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
-                        </Card.Body>
-                    </Card>
+                    <MessageCard 
+                        sender="John Smith" 
+                        content="Hello William, how are you doing?"
+                        timestamp="19/05/2021 - 23:35"
+                    />
+                    <MessageCard 
+                        sender="John Smith" 
+                        content="Hello William, how are you doing?"
+                        timestamp="19/05/2021 - 23:35"
+                    />
+                    <MessageCard 
+                        sender="John Smith" 
+                        content="Hello William, how are you doing?"
+                        timestamp="19/05/2021 - 23:35"
+                    />
+                    <MessageCard 
+                        sender="John Smith" 
+                        content="Hello William, how are you doing?"
+                        timestamp="19/05/2021 - 23:35"
+                    />
                 </div>
             </AppScreen>
     );
