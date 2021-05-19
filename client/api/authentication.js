@@ -98,6 +98,9 @@ function readSessionFile(username, password) {
 
     
     try {
+        if(!fs.existsSync("./users/")) {
+            fs.mkdirSync("./users");
+        }
         const encrypted = fs.readFileSync("./users/" + username, "base64");
         const decrypted = decryptWithPassword(encrypted, hashedPassword);
 

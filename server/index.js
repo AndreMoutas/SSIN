@@ -108,7 +108,7 @@ httpsServer.listen(port, async () => {
     console.log(`Server running on ${process.env.NODE_ENV} mode, at port ${port}.`)
 
     console.log((await db.User.findAll()).map(user => user.toJSON()))
-    //await db.connect();
+    await db.connect();
     //await db.reset();
 
 })
