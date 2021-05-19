@@ -26,7 +26,7 @@ function Login() {
             setPassword("");
             setFeedback("Wrong username or password");
         } else {
-            window.location.reload();
+            window.location.href = '/operations';
         }
     }
 

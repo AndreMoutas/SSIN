@@ -27,7 +27,7 @@ function Register() {
             setFeedback("Wrong username or one time ID");
             setPassword("");
         } else {
-            window.location.reload();
+            window.location.href = '/operations';
         }
     }
 
