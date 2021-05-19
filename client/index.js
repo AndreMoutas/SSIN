@@ -62,6 +62,12 @@ app.post("/register", async function(req, res) {
     return res.status(status).json();
 })
 
+app.get("/message", async function(req, res) {
+    const { receiver, message } = req.body;
+    messenger.send(receiver, message);
+    return res.status(200).json();
+})
+
 app.post("/message",async (req,res) => {
     console.log(req.body);
 

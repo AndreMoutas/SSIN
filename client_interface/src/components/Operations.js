@@ -65,7 +65,7 @@ class Operations extends Component {
                 <Row style={styles.row}>
                     <Form>
                         <Form.Group controlId="number">
-                            <Form.Label>Number</Form.Label>
+                            <Form.Label style={styles.labelStyle}>Square Root Operation</Form.Label>
                             <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ sqrtOperand: e.target.value })} />
                             <Form.Text className="text-dark">
                                 Operand of the square root operation
@@ -82,7 +82,7 @@ class Operations extends Component {
                 <Row style={styles.row}>
                     <Form>
                         <Form.Group controlId="number">
-                            <Form.Label>Number</Form.Label>
+                            <Form.Label style={styles.labelStyle} >Cubic Root Operation</Form.Label>
                             <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ cbrtOperand: e.target.value })} />
                             <Form.Text className="text-dark">
                                 Operand of the cubic root operation
@@ -98,8 +98,7 @@ class Operations extends Component {
                 </Row>
                 <Row style={styles.row}>
                     <Form>
-                        <Form.Label>N Root Operation</Form.Label>
-
+                        <Form.Label style={styles.labelStyle}>N Root Operation</Form.Label>
                         <Form.Group controlId="number">
                             <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ nrtOperand: e.target.value })} />
                             <Form.Text className="text-dark">
@@ -143,6 +142,9 @@ const styles = {
         padding: '10px',
         marginBottom: '20px',
         marginTop: '20px',
+    },
+    labelStyle: {
+        fontWeight: 'bold' 
     }
 }
 
