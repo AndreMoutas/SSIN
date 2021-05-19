@@ -9,54 +9,37 @@ function MyMessages() {
     const [message, setMessage] = useState("");
     const [feedback, setFeedback] = useState("");
 
-    async function sendMessage(e) {
-        e.preventDefault();
-
-        let body = { receiver: receiver, message: message };
-        fetch(`http://localhost:2000/message`, {
-            method: "GET",
-            body: JSON.stringify(body),
-            headers: { 'Message-Type': 'application/json' },
-        })
-            .then(res => res.status)
-            .then(status => handleLoginResponse(status))
-            .catch(err => err);
-    }
-
-    function handleLoginResponse(status) {
-        
-        if (status !== 200) {
-            setFeedback("User is likely offline!");
-        } else {
-            setReceiver("");
-            setMessage("");
-            setFeedback("Message sent!")
+    const messages = [
+        {
+            sender: "John Smith",
+            content: "Hello William, how are you doing?",
+            timestamp: "19/05/2021 - 23:35"
+        },
+        {
+            sender: "John Smith",
+            content: "Hello William, how are you doing?",
+            timestamp: "19/05/2021 - 23:35"
+        },
+        {
+            sender: "John Smith",
+            content: "Hello William, how are you doing?",
+            timestamp: "19/05/2021 - 23:35"
         }
-    }
+    ];
 
     return (
             <AppScreen title="My Messages">
                 <div style={styles.div}>
-                    <MessageCard 
-                        sender="John Smith" 
-                        content="Hello William, how are you doing?"
-                        timestamp="19/05/2021 - 23:35"
-                    />
-                    <MessageCard 
-                        sender="John Smith" 
-                        content="Hello William, how are you doing?"
-                        timestamp="19/05/2021 - 23:35"
-                    />
-                    <MessageCard 
-                        sender="John Smith" 
-                        content="Hello William, how are you doing?"
-                        timestamp="19/05/2021 - 23:35"
-                    />
-                    <MessageCard 
-                        sender="John Smith" 
-                        content="Hello William, how are you doing?"
-                        timestamp="19/05/2021 - 23:35"
-                    />
+                    {messages.map((message) => {
+                        return (
+                            <MessageCard
+                                sender={message.sender}
+                                content={message.content}
+                                timestamp={message.timestamp}
+                            />
+                        );
+                    })}
+                    
                 </div>
             </AppScreen>
     );
