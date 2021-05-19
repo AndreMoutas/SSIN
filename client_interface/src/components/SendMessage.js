@@ -11,7 +11,7 @@ function SendMessage() {
         e.preventDefault();
 
         let body = { receiver: receiver, message: message };
-        fetch(`http://localhost:${}/message`, {
+        fetch(`http://localhost:2000/message`, {
             method: "GET",
             body: JSON.stringify(body),
             headers: { 'Message-Type': 'application/json' },
