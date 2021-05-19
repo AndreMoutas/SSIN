@@ -24,7 +24,11 @@ function TopBar() {
             }
             {
                 isLoggedIn && 
-                <Nav.Link href="messages" style={styles.navOption}>Messages</Nav.Link>
+                <Nav.Link href="messages" style={styles.navOption}>Send Message</Nav.Link>
+            }
+            {
+                isLoggedIn && 
+                <Nav.Link href="sendMessage" style={styles.navOption}>My Messages</Nav.Link>
             }
             </Nav>
         </Navbar>
