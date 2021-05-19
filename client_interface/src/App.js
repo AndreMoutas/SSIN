@@ -7,9 +7,9 @@ import Operations from "./components/Operations";
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Messages from "./components/SendMessage";
 import TopBar from "./components/TopBar";
 import SendMessage from "./components/SendMessage";
+import MyMessages from "./components/MyMessages";
 
 class App extends Component {
     componentDidMount() {
@@ -22,7 +22,7 @@ class App extends Component {
                 <TopBar/>
                 <Switch>
                     <Route path="/operations" component={Operations}/>
-                    <Route path="/messages" component={Messages}/>
+                    <Route path="/messages" component={MyMessages}/>
                     <Route path="/register" component={Register}/>
                     <Route path="/sendMessage" component={SendMessage}/>
                     <Route path="/" component={Login}/>
