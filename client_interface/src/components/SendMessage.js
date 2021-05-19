@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Row } from 'react-bootstrap';
+import AppScreen from "./AppScreen";
 
 function SendMessage() {
 
@@ -22,7 +23,7 @@ function SendMessage() {
     }
 
     function handleLoginResponse(status) {
-        
+
         if (status !== 200) {
             setFeedback("User is likely offline!");
         } else {
@@ -33,27 +34,29 @@ function SendMessage() {
     }
 
     return (
-        <div style={styles.div}>
-            <Form>
-                <Form.Group controlId="receiver">
-                    <Form.Label style={styles.label}>Receiver</Form.Label>
-                    <Form.Control value={receiver} placeholder="Username" onChange={e => setReceiver(e.target.value)} />
-                </Form.Group>
+        <AppScreen title="Send Message">
+            <div style={styles.div}>
+                <Form>
+                    <Form.Group controlId="receiver">
+                        <Form.Label style={styles.label}>Receiver</Form.Label>
+                        <Form.Control value={receiver} placeholder="Username" onChange={e => setReceiver(e.target.value)} />
+                    </Form.Group>
 
-                <Form.Group controlId="message">
-                    <Form.Label style={styles.label}>Message</Form.Label>
-                    <Form.Control value={message} type="text" as="textarea" rows="3" placeholder="Message" onChange={e => setMessage(e.target.value)} />
-                </Form.Group>
+                    <Form.Group controlId="message">
+                        <Form.Label style={styles.label}>Message</Form.Label>
+                        <Form.Control value={message} type="text" as="textarea" rows="3" placeholder="Message" onChange={e => setMessage(e.target.value)} />
+                    </Form.Group>
 
-                <p>{feedback}</p>
+                    <p>{feedback}</p>
 
-                <Row style={styles.row}>
-                    <Button variant="dark" type="submit" onClick={sendMessage} >
-                        Send
+                    <Row style={styles.row}>
+                        <Button variant="dark" type="submit" onClick={sendMessage} >
+                            Send
                     </Button>
-                </Row>
-            </Form>
-        </div>
+                    </Row>
+                </Form>
+            </div>
+        </AppScreen>
     );
 }
 
@@ -65,7 +68,7 @@ const styles = {
         width: '50%',
         margin: 'auto',
         padding: '25px',
-        marginTop: '100px',
+        marginTop: '75px',
     },
     label: {
         color: 'white'

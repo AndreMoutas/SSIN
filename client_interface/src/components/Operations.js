@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Button, Form, Row } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AppScreen from "./AppScreen";
 
 class Operations extends Component {
     constructor(props) {
@@ -61,66 +62,68 @@ class Operations extends Component {
 
     render() {
         return (
-            <div className="App" style={styles.div}>
-                <Row style={styles.row}>
-                    <Form>
-                        <Form.Group controlId="number">
-                            <Form.Label style={styles.labelStyle}>Square Root Operation</Form.Label>
-                            <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ sqrtOperand: e.target.value })} />
-                            <Form.Text className="text-dark">
-                                Operand of the square root operation
-                            </Form.Text>
-                        </Form.Group>
+            <AppScreen title="Operations">
+                <div className="App" style={styles.div}>
+                    <Row style={styles.row}>
+                        <Form>
+                            <Form.Group controlId="number">
+                                <Form.Label style={styles.labelStyle}>Square Root Operation</Form.Label>
+                                <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ sqrtOperand: e.target.value })} />
+                                <Form.Text className="text-dark">
+                                    Operand of the square root operation
+                                </Form.Text>
+                            </Form.Group>
 
-                        <p className="App-intro">{this.state.sqrt}</p>
+                            <p className="App-intro">{this.state.sqrt}</p>
 
-                        <Button variant="dark" type="submit" onClick={this.requestSqrt}>
-                            Calculate
-                        </Button>
-                    </Form>
-                </Row>
-                <Row style={styles.row}>
-                    <Form>
-                        <Form.Group controlId="number">
-                            <Form.Label style={styles.labelStyle} >Cubic Root Operation</Form.Label>
-                            <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ cbrtOperand: e.target.value })} />
-                            <Form.Text className="text-dark">
-                                Operand of the cubic root operation
-                            </Form.Text>
-                        </Form.Group>
+                            <Button variant="dark" type="submit" onClick={this.requestSqrt}>
+                                Calculate
+                            </Button>
+                        </Form>
+                    </Row>
+                    <Row style={styles.row}>
+                        <Form>
+                            <Form.Group controlId="number">
+                                <Form.Label style={styles.labelStyle} >Cubic Root Operation</Form.Label>
+                                <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ cbrtOperand: e.target.value })} />
+                                <Form.Text className="text-dark">
+                                    Operand of the cubic root operation
+                                </Form.Text>
+                            </Form.Group>
 
-                        <p className="App-intro">{this.state.cbrt}</p>
+                            <p className="App-intro">{this.state.cbrt}</p>
 
-                        <Button variant="dark" type="submit" onClick={this.requestCbrt}>
-                            Calculate
-                        </Button>
-                    </Form>
-                </Row>
-                <Row style={styles.row}>
-                    <Form>
-                        <Form.Label style={styles.labelStyle}>N Root Operation</Form.Label>
-                        <Form.Group controlId="number">
-                            <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ nrtOperand: e.target.value })} />
-                            <Form.Text className="text-dark">
-                                Operand of the n root operation
-                            </Form.Text>
-                        </Form.Group>
+                            <Button variant="dark" type="submit" onClick={this.requestCbrt}>
+                                Calculate
+                            </Button>
+                        </Form>
+                    </Row>
+                    <Row style={styles.row}>
+                        <Form>
+                            <Form.Label style={styles.labelStyle}>N Root Operation</Form.Label>
+                            <Form.Group controlId="number">
+                                <Form.Control type="number" placeholder="Enter number" onChange={e => this.setState({ nrtOperand: e.target.value })} />
+                                <Form.Text className="text-dark">
+                                    Operand of the n root operation
+                                </Form.Text>
+                            </Form.Group>
 
-                        <Form.Group controlId="root">
-                            <Form.Control type="number" placeholder="Enter root" onChange={e => this.setState({ nrtRoot: e.target.value })} />
-                            <Form.Text className="text-dark">
-                                Root of the n root operation
-                            </Form.Text>
-                        </Form.Group>
+                            <Form.Group controlId="root">
+                                <Form.Control type="number" placeholder="Enter root" onChange={e => this.setState({ nrtRoot: e.target.value })} />
+                                <Form.Text className="text-dark">
+                                    Root of the n root operation
+                                </Form.Text>
+                            </Form.Group>
 
-                        <p className="App-intro">{this.state.nrt}</p>
+                            <p className="App-intro">{this.state.nrt}</p>
 
-                        <Button variant="dark" type="submit" onClick={this.requestNrt}>
-                            Calculate
-                        </Button>
-                    </Form>
-                </Row>
-            </div>
+                            <Button variant="dark" type="submit" onClick={this.requestNrt}>
+                                Calculate
+                            </Button>
+                        </Form>
+                    </Row>
+                </div>
+            </AppScreen>
         );
     }
 }

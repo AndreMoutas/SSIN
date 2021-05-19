@@ -1,5 +1,6 @@
 import React, { useState, Text } from "react";
 import { Button, Form, Row, Card } from 'react-bootstrap';
+import AppScreen from "./AppScreen";
 
 function MyMessages() {
 
@@ -33,41 +34,40 @@ function MyMessages() {
     }
 
     return (
-        <>
-            <p style={styles.pageTitle}>My Messages</p>
-            <div style={styles.div}>
-                <Card style={styles.card}>
-                    <Card.Body>
-                        <Card.Title>John Smith</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
-                        <Card.Text>
-                            Hello William! It's me, John!!
-                        </Card.Text>
-                        <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
-                    </Card.Body>
-                </Card>
-                <Card style={styles.card}>
-                    <Card.Body>
-                        <Card.Title>John Smith</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
-                        <Card.Text>
-                            Hello William! It's me, John!!
-                        </Card.Text>
-                        <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
-                    </Card.Body>
-                </Card>
-                <Card style={styles.card}>
-                    <Card.Body>
-                        <Card.Title>John Smith</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
-                        <Card.Text>
-                            Hello William! It's me, John!!
-                        </Card.Text>
-                        <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
-                    </Card.Body>
-                </Card>
-            </div>
-        </>
+            <AppScreen title="My Messages">
+                <div style={styles.div}>
+                    <Card style={styles.card}>
+                        <Card.Body>
+                            <Card.Title>John Smith</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
+                            <Card.Text>
+                                Hello William! It's me, John!!
+                            </Card.Text>
+                            <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
+                        </Card.Body>
+                    </Card>
+                    <Card style={styles.card}>
+                        <Card.Body>
+                            <Card.Title>John Smith</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
+                            <Card.Text>
+                                Hello William! It's me, John!!
+                            </Card.Text>
+                            <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
+                        </Card.Body>
+                    </Card>
+                    <Card style={styles.card}>
+                        <Card.Body>
+                            <Card.Title>John Smith</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted">19/05/2021 - 23:09</Card.Subtitle>
+                            <Card.Text>
+                                Hello William! It's me, John!!
+                            </Card.Text>
+                            <Card.Link href="#" style={{color: 'black'}}>Reply</Card.Link>
+                        </Card.Body>
+                    </Card>
+                </div>
+            </AppScreen>
     );
 }
 
@@ -81,7 +81,7 @@ const styles = {
         paddingLeft: '50px',
         paddingRight: '50px',
         paddingBottom: '30px',
-        marginTop: '100px',
+        marginTop: '75px',
     },
     label: {
         color: 'white'
