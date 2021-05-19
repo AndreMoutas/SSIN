@@ -1,13 +1,8 @@
-import React, { useState, Text } from "react";
-import { Button, Form, Row, Card } from 'react-bootstrap';
+import React, { useState } from "react";
 import AppScreen from "./AppScreen";
 import MessageCard from "./MessageCard";
 
 function MyMessages() {
-
-    const [receiver, setReceiver] = useState("");
-    const [message, setMessage] = useState("");
-    const [feedback, setFeedback] = useState("");
 
     const messages = [
         {
@@ -67,20 +62,6 @@ const styles = {
     },
     row: {
         justifyMessage: 'space-between'
-    },
-    pageTitle: {
-        fontSize: 36, 
-        color: 'white', 
-        fontWeight: 'bold',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    card: {
-        width: '100%', 
-        backgroundColor: 'lightGray',
-        border: '1px solid rgba(0, 0, 0, 0.05)',
-        borderRadius: '10px',
-        marginTop: '30px',
     }
 }
 

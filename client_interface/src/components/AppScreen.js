@@ -14,6 +14,7 @@ const styles = {
         fontWeight: 'bold',
         display: 'flex',
         justifyContent: 'center',
+        marginBottom: 75
     }
 }
 
