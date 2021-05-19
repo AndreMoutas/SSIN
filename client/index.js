@@ -71,7 +71,7 @@ app.post("/register", async function(req, res) {
 })
 
 app.get("/message", async function(req, res) {
-    const { receiver, message } = req.body;
+    const { receiver, message } = req.query;
     messenger.send(receiver, message);
     return res.status(200).json();
 })

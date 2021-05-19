@@ -18,27 +18,14 @@ class Operations extends Component {
             nrtOperand: "",
             nrtRoot: "",
         };
-        this.callAPI = this.callAPI.bind(this);
         this.requestSqrt = this.requestSqrt.bind(this);
         this.requestCbrt = this.requestCbrt.bind(this);
         this.requestNrt = this.requestNrt.bind(this);
     }
 
-    handle() {
-        console.log("handling");
-        this.setState({ apiResponse: "adasdasdasdasd" });
-    }
-
-    async callAPI() {
-        fetch("http://localhost:2000/testAPI")
-            .then(res => res.text())
-            .then(res => this.setState({ apiResponse: res }))
-            .catch(err => err);
-    }
-
     async requestSqrt(e) {
         e.preventDefault();
-        fetch(`http://localhost:2000/sqrt?number=${this.state.sqrtOperand}`)
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/sqrt?number=${this.state.sqrtOperand}`)
             .then(res => res.text())
             .then(res => { this.setState({ sqrt: res }) })
             .catch(err => err);
@@ -46,7 +33,7 @@ class Operations extends Component {
 
     async requestCbrt(e) {
         e.preventDefault();
-        fetch(`http://localhost:2000/cbrt?number=${this.state.cbrtOperand}`)
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/cbrt?number=${this.state.cbrtOperand}`)
             .then(res => res.text())
             .then(res => { this.setState({ cbrt: res }) })
             .catch(err => err);
@@ -54,7 +41,7 @@ class Operations extends Component {
 
     async requestNrt(e) {
         e.preventDefault();
-        fetch(`http://localhost:2000/nrt?number=${this.state.nrtOperand}&root=${this.state.nrtRoot}`)
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/nrt?number=${this.state.nrtOperand}&root=${this.state.nrtRoot}`)
             .then(res => res.text())
             .then(res => { this.setState({ nrt: res }) })
             .catch(err => err);
