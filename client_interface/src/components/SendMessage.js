@@ -10,13 +10,8 @@ function SendMessage() {
 
     async function sendMessage(e) {
         e.preventDefault();
-
-        let body = { receiver: receiver, message: message };
-        fetch(`http://localhost:2000/message`, {
-            method: "GET",
-            body: JSON.stringify(body),
-            headers: { 'Message-Type': 'application/json' },
-        })
+        
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/message?receiver=${receiver}&message=${message}`)
             .then(res => res.status)
             .then(status => handleLoginResponse(status))
             .catch(err => err);

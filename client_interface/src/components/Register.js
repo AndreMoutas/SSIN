@@ -12,7 +12,7 @@ function Register() {
         e.preventDefault();
         
         let body = {username: username, password: password, oneTimeID: oneTimeID};
-        fetch("http://localhost:2000/register", {
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/register`, {
             method: "POST",
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' },

@@ -8,7 +8,7 @@ function TopBar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        fetch(`http://localhost:2000/authorization`)
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/authorization`)
             .then(res => res.status)
             .then(status => { if (status === 200) setIsLoggedIn(true)})
             .catch(err => err);

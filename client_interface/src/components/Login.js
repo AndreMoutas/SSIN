@@ -11,7 +11,7 @@ function Login() {
         e.preventDefault();
         
         let body = {username: username, password: password};
-        fetch("http://localhost:2000/login", {
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/login`, {
             method: "POST",
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' },
