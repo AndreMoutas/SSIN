@@ -74,6 +74,17 @@ exports.receive = async (sender, encrypted, nonce) => {
         session.SessionAddMessage(sender, encrypted, endpoint.decryptionKey, nonce)
 
     return decrypted;
+    
+exports.getAll = () => {
+    const session = authentication.GetCurrentSession();
+
+    let messages = [];
+    if (session.messages.length === 0)
+        return [];
+    session.messages.slice().reverse().forEach((message) => {
+        messages.push({sender: message.from, timestamp: message.timestamp, content: message.message});
+    })
+    return messages;
 }
 
 exports.displayAll = () => {

@@ -1,42 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppScreen from "./AppScreen";
 import MessageCard from "./MessageCard";
 
 function MyMessages() {
 
-    const messages = [
-        {
-            sender: "John Smith",
-            content: "Hello William, how are you doing?",
-            timestamp: "19/05/2021 - 23:35"
-        },
-        {
-            sender: "John Smith",
-            content: "Hello William, how are you doing?",
-            timestamp: "19/05/2021 - 23:35"
-        },
-        {
-            sender: "John Smith",
-            content: "Hello William, how are you doing?",
-            timestamp: "19/05/2021 - 23:35"
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        fetch(`http://localhost:${process.env.REACT_APP_PORT}/messages`)
+            .then(res => { if (res.status === 200) res.json().then((result) => {setMessages(result)})})
+            .catch(err => err);
+    }, [messages]);
+
+    function getReadableTimestamp(timestamp) {
+        try {
+            let pieces = timestamp.split("T");
+            let day = pieces[0];
+            let hour = pieces[1].split(".")[0];
+            return day + " " + hour;
+        } catch (error) {
+            return "";
         }
-    ];
+        
+    }
 
     return (
-            <AppScreen title="My Messages">
-                <div style={styles.div}>
-                    {messages.map((message) => {
-                        return (
-                            <MessageCard
-                                sender={message.sender}
-                                content={message.content}
-                                timestamp={message.timestamp}
-                            />
-                        );
-                    })}
-                    
-                </div>
-            </AppScreen>
+        <AppScreen title="My Messages">
+            <div style={styles.div}>
+                {messages.map((message, index) => {
+                    return (
+                        <MessageCard
+                            sender={message.sender}
+                            content={message.content}
+                            timestamp={getReadableTimestamp(message.timestamp)}
+                            key={index}
+                        />
+                    );
+                })}
+                
+            </div>
+        </AppScreen>
     );
 }
 
