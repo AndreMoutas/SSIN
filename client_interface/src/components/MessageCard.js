@@ -9,7 +9,7 @@ function MessageCard(props) {
                 <Card.Text>
                     {props.content}
                 </Card.Text>
-                <Card.Link href="/sendMessage" style={{ color: 'black' }}>Reply</Card.Link>
+                <Card.Link href='/sendMessage' style={{ color: 'black' }}>Reply</Card.Link>
             </Card.Body>
         </Card>
     );

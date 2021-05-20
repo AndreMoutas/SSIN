@@ -45,6 +45,18 @@ exports.send = async (receiver, message) => {
     });
 }
 
+exports.getAll = () => {
+    const session = authentication.GetCurrentSession();
+
+    let messages = [];
+    if (session.messages.length === 0)
+        return [];
+    session.messages.slice().reverse().forEach((message) => {
+        messages.push({sender: message.from, timestamp: message.timestamp, content: message.message});
+    })
+    return messages;
+}
+
 exports.displayAll = () => {
     const session = authentication.GetCurrentSession();
 
