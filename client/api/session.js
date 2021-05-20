@@ -54,7 +54,7 @@ exports.CreateNewSession = (username, password, token) => {
         token: token,
         messages: [],
         endpoints: {},
-        usedNonces: []
+        usedNonces: {}
     };
 
     currentSession.hashedPassword = hashPassword(password)
@@ -65,7 +65,7 @@ exports.CreateNewSession = (username, password, token) => {
 exports.GetCurrentSession = () => currentSession.session
 
 exports.SessionAddMessage = (from, encrypted, decryptionKey, nonce) => {
-    if (currentSession.session.usedNonces.includes(nonce))
+    if (currentSession.session.usedNonces[nonce])
         return console.error("Attempted to add duplicate message, possible replay attack!")
 
     currentSession.session.messages.push({
@@ -75,7 +75,7 @@ exports.SessionAddMessage = (from, encrypted, decryptionKey, nonce) => {
         timestamp: new Date(),
     });
 
-    currentSession.session.usedNonces.push(nonce)
+    currentSession.session.usedNonces[nonce] = true
 
     saveSessionFile()
 }
