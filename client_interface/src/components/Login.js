@@ -46,7 +46,7 @@ function Login() {
                 <p>{feedback}</p>
 
                 <Row style={styles.row}>
-                    <Button variant="dark" type="submit" onClick={handleLogin} >
+                    <Button style={styles.button} variant="dark" type="submit" onClick={handleLogin} >
                         Login
                     </Button>
                     <a style={styles.link} href="/register">Pretende fazer o registo?</a>
@@ -75,7 +75,11 @@ const styles = {
         marginRight: '1em'
     },
     row: {
+        marginTop: '2em',
         justifyContent: 'space-between'
+    },
+    button: {
+        marginLeft: '1em'
     }
 }
 

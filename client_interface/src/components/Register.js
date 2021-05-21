@@ -53,7 +53,7 @@ function Register() {
                 <p>{feedback}</p>
 
                 <Row style={styles.row}>
-                    <Button variant="dark" type="submit" onClick={handleRegister} >
+                    <Button style={styles.button} variant="dark" type="submit" onClick={handleRegister} >
                         Register
                     </Button>
                     <a style={styles.link} href="/">Já possui conta?</a>
@@ -82,7 +82,11 @@ const styles = {
         marginRight: '1em'
     },
     row: {
+        marginTop: '2em',
         justifyContent: 'space-between'
+    },
+    button: {
+        marginLeft: '1em'
     }
 }
 
