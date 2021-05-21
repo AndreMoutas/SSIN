@@ -73,42 +73,9 @@ function SetAutomaticHeader(token) {
 // Dps disto falta https(?) nas mensagens c/ proof of authorship/non-repudiation
 const currentSession = { session: null, hashedPassword: null }
 
-function readSessionFile(username, password) {
-    const hashedPassword = hashPassword(password);
-
-    
-    try {
-        if(!fs.existsSync("./users/")) {
-            fs.mkdirSync("./users");
-        }
-        const encrypted = fs.readFileSync("./users/" + username, "base64");
-        const decrypted = decryptWithPassword(encrypted, hashedPassword);
-
-        currentSession.session = JSON.parse(decrypted);
-        currentSession.hashedPassword = hashedPassword
-
-        return JSON.parse(decrypted);
-    } catch (err) {
-        return null;
-    }
-}
-
 function saveSessionFile() {
     const encrypted = encryptWithPassword(JSON.stringify(currentSession.session), currentSession.hashedPassword);
     fs.writeFileSync("./users/" + currentSession.session.username, encrypted, { encoding: "base64"} );
-}
-
-function createNewSession(username, password, token) {
-    currentSession.session = {
-        username: username,
-        token: token,
-        messages: [],
-        endpoints: {}
-    };
-
-    currentSession.hashedPassword = hashPassword(password)
-
-    saveSessionFile();
 }
 
 exports.GetCurrentSession = () => currentSession.session

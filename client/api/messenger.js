@@ -18,7 +18,7 @@ async function getClientEndpoint(username) {
     console.log("Asking the server!")
 
     // Ask the server for the user's endpoint + keys
-    const result = await axios.get("https://localhost:3000/clientKeys", {
+    const result = await axios.get("https://localhost:5000/clientKeys", {
         params: { username: username },
     })
 
@@ -74,7 +74,8 @@ exports.receive = async (sender, encrypted, nonce) => {
         session.SessionAddMessage(sender, encrypted, endpoint.decryptionKey, nonce)
 
     return decrypted;
-    
+}
+
 exports.getAll = () => {
     const session = authentication.GetCurrentSession();
 
