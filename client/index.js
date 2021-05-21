@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 const port = process.argv[2] || 2000;
 
 app.use((req, res, next) => {
-    if (session.GetCurrentSession())
+    if (session.GetCurrentSession() || req.path == "/login" || req.path == "/register")
         next();
     else console.error("Received a request while not logged in. Ignoring.")
 });
