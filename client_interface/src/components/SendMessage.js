@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Row } from 'react-bootstrap';
 import AppScreen from "./AppScreen";
 
-function SendMessage() {
+function SendMessage(props) {
 
     const [receiver, setReceiver] = useState("");
     const [message, setMessage] = useState("");
     const [feedback, setFeedback] = useState("");
+
+    useEffect(() => {
+        let receiver = props.location.search.split("=")[1];
+        if (receiver !== undefined) {
+            setReceiver(receiver);
+        }
+    }, [props]);
 
     async function sendMessage(e) {
         e.preventDefault();
@@ -45,7 +52,7 @@ function SendMessage() {
                     <p>{feedback}</p>
 
                     <Row style={styles.row}>
-                        <Button variant="dark" type="submit" onClick={sendMessage} >
+                        <Button style={styles.button} variant="dark" type="submit" onClick={sendMessage} >
                             Send
                     </Button>
                     </Row>
@@ -75,6 +82,9 @@ const styles = {
     },
     row: {
         justifyMessage: 'space-between'
+    },
+    button: {
+        marginLeft: '1em'
     }
 }
 

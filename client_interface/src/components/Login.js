@@ -49,7 +49,7 @@ function Login() {
                     <Button style={styles.button} variant="dark" type="submit" onClick={handleLogin} >
                         Login
                     </Button>
-                    <a style={styles.link} href="/register">Pretende fazer o registo?</a>
+                    <a style={styles.link} href="/register">Don't have an account?</a>
                 </Row>
             </Form>
         </div>

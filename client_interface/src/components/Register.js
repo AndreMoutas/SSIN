@@ -56,7 +56,7 @@ function Register() {
                     <Button style={styles.button} variant="dark" type="submit" onClick={handleRegister} >
                         Register
                     </Button>
-                    <a style={styles.link} href="/">Já possui conta?</a>
+                    <a style={styles.link} href="/">Already have an account?</a>
                 </Row>
             </Form>
         </div>

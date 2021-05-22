@@ -3,7 +3,7 @@ const session = require("./session")
 const crypto = require('crypto');
 
 async function getClientEndpoint(username) {
-    const knownEndpoint = session.SessionGetEndpoint(username)
+    const knownEndpoint = session.SessionGetEndpoint(username);
     if (knownEndpoint) {
         try {
             // Ping succeeded, so endpoint is valid
@@ -77,25 +77,13 @@ exports.receive = async (sender, encrypted, nonce) => {
 }
 
 exports.getAll = () => {
-    const session = authentication.GetCurrentSession();
+    const currSession = session.GetCurrentSession();
 
     let messages = [];
-    if (session.messages.length === 0)
+    if (currSession.messages.length === 0)
         return [];
-    session.messages.slice().reverse().forEach((message) => {
-        messages.push({sender: message.from, timestamp: message.timestamp, content: message.message});
-    })
-    return messages;
-}
-
-exports.displayAll = () => {
-    const session = authentication.GetCurrentSession();
-
-    let messages = [];
-    if (session.messages.length === 0)
-        return [];
-    session.messages.slice().reverse().forEach((message) => {
-        messages.push({sender: message.from, timestamp: message.timestamp, content: message.message});
+        currSession.messages.slice().reverse().forEach((message) => {
+        messages.push({sender: message.from, timestamp: message.timestamp, content: decryptMessage(message.encrypted, message.decryptionKey)});
     })
     return messages;
 }
