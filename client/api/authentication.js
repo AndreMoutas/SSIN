@@ -2,16 +2,25 @@ const axios = require("./axios")
 const session = require("./session");
 
 exports.Register = async (username, password, oneTimeId, sender) => {
-    const result = await axios.post("https://localhost:3000/register", {
-        username: username,
-        oneTimeId: oneTimeId,
-        password: password,
-        endpoint: sender
-    })
+    let result;
+    try {
+        result = await axios.post("https://localhost:5000/register", {
+            username: username,
+            oneTimeId: oneTimeId,
+            password: password,
+            endpoint: sender
+        })
+    } catch (error) {
+        return 401;
+    }
 
     session.CreateNewSession(username, password, result.data.token);
     console.log("Successful operation, here is your current session: ", session.GetCurrentSession())
     SetAutomaticHeader(result.data.token);
+
+    console.log(currentSession);
+
+    return 200;
 }
 
 exports.Login = async (username, password, sender) => {
@@ -20,11 +29,17 @@ exports.Login = async (username, password, sender) => {
     if (!decrypted) {
         console.error("Wrong password, could not decrypt user data, performing server login");
 
-        const result = await axios.post("https://localhost:3000/login", {
-            username: username,
-            password: password,
-            endpoint: sender
-        })
+        let result;
+
+        try {
+            result = await axios.post("https://localhost:5000/login", {
+                username: username,
+                password: password,
+                endpoint: sender
+            })
+        } catch (error) {
+            return 401;
+        }
 
         session.CreateNewSession(username, password, result.data.token);
         console.log("Successful operation, here is your current session: ", session.GetCurrentSession())
@@ -35,6 +50,8 @@ exports.Login = async (username, password, sender) => {
         console.log("Successful local login, here is your session info: ", session.GetCurrentSession())
         SetAutomaticHeader(decrypted.token);
     }
+
+    return 200;
 }
 
 
@@ -48,4 +65,41 @@ function SetAutomaticHeader(token) {
             return Promise.reject(error);
         }
     )
+}
+
+
+// Esta parte podia ir p/ outro ficheiro talvez
+// Save messages, and user locations
+// Dps disto falta https(?) nas mensagens c/ proof of authorship/non-repudiation
+const currentSession = { session: null, hashedPassword: null }
+
+function saveSessionFile() {
+    const encrypted = encryptWithPassword(JSON.stringify(currentSession.session), currentSession.hashedPassword);
+    fs.writeFileSync("./users/" + currentSession.session.username, encrypted, { encoding: "base64"} );
+}
+
+exports.GetCurrentSession = () => currentSession.session
+exports.SessionAddMessage = (from, message) => {
+    currentSession.session.messages.push({
+        from: from,
+        message: message,
+        timestamp: new Date(),
+    });
+
+
+    saveSessionFile()
+}
+
+exports.SessionAddEndpoint = (username, endpoint) => {
+    currentSession.session.endpoints[username] = endpoint;
+    saveSessionFile()
+}
+
+exports.SessionRemoveEndpoint = (username) => {
+    delete currentSession.session.endpoints[username];
+    saveSessionFile()
+}
+
+exports.SessionGetEndpoint = (username) => {
+    return currentSession.session.endpoints[username];
 }

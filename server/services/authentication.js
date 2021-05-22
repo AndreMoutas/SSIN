@@ -35,10 +35,14 @@ passport.use('login', new LocalStrategy(
     async (username, password, done) => {
         let user = await db.User.findOne({where: {username: username}});
 
-        if (user === null || !await checkPassword(password, user.passwordDigest)) {
+        try {
+            if (user === null || !await checkPassword(password, user.passwordDigest)) {
+                return done('Invalid credentials.', null);
+            }
+            return done(null, user);
+        } catch (error) {
             return done('Invalid credentials.', null);
         }
-        return done(null, user);
     }
 ));
 

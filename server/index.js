@@ -92,7 +92,7 @@ app.get("/clientKeys", authentication.authenticateMiddleware, authentication.min
         });
     }
     catch (err) {
-        return res.status(201).json(null);
+        return res.status(404).json(null);
     }
 })
 
@@ -112,7 +112,7 @@ httpsServer.listen(port, async () => {
     console.log(`Server running on ${process.env.NODE_ENV} mode, at port ${port}.`)
 
     // console.log((await db.User.findAll()).map(user => user.toJSON()))
-    // await db.reset();
+    //await db.reset();
     await db.connect();
 
 })

@@ -3,7 +3,7 @@ const session = require("./session")
 const crypto = require('crypto');
 
 async function getClientEndpoint(username) {
-    const knownEndpoint = session.SessionGetEndpoint(username)
+    const knownEndpoint = session.SessionGetEndpoint(username);
     if (knownEndpoint) {
         try {
             // Ping succeeded, so endpoint is valid
@@ -18,7 +18,7 @@ async function getClientEndpoint(username) {
     console.log("Asking the server!")
 
     // Ask the server for the user's endpoint + keys
-    const result = await axios.get("https://localhost:3000/clientKeys", {
+    const result = await axios.get("https://localhost:5000/clientKeys", {
         params: { username: username },
     })
 
@@ -74,6 +74,18 @@ exports.receive = async (sender, encrypted, nonce) => {
         session.SessionAddMessage(sender, encrypted, endpoint.decryptionKey, nonce)
 
     return decrypted;
+}
+
+exports.getAll = () => {
+    const currSession = session.GetCurrentSession();
+
+    let messages = [];
+    if (currSession.messages.length === 0)
+        return [];
+        currSession.messages.slice().reverse().forEach((message) => {
+        messages.push({sender: message.from, timestamp: message.timestamp, content: decryptMessage(message.encrypted, message.decryptionKey)});
+    })
+    return messages;
 }
 
 exports.displayAll = () => {

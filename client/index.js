@@ -2,10 +2,12 @@ const authentication = require("./api/authentication");
 const session = require("./api/session");
 const messenger = require("./api/messenger");
 const roots = require("./api/roots");
+var cors = require("cors");
 
 // Create message server
 const express = require("express");
 const app = express();
+app.use(cors());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -14,13 +16,68 @@ app.use(bodyParser.json());
 const port = process.argv[2] || 2000;
 
 app.use((req, res, next) => {
-    if (session.GetCurrentSession())
+    if (session.GetCurrentSession() || req.path == "/login" || req.path == "/register")
         next();
-    else console.error("Received a request while not logged in. Ignoring.")
+    else console.error("Received a request while not logged in. Ignoring.");
 });
 
 app.get("/ping", async (req, res) => {
     res.status(200).send();
+})
+
+app.get("/", async function(req, res) {
+    res.send("API is working properly");
+});
+
+app.get("/testAPI", async function(req, res) {
+    res.send("API is working properly");
+});
+
+app.get("/authorization", async function(req, res) {
+    let result;
+    try {
+        result = await roots.RequestSqrt(4);
+    } catch (error) {
+        return res.status(401).json();
+    }
+    return res.status(200).json();
+});
+
+app.get("/sqrt", async function(req, res) {
+    let result = await roots.RequestSqrt(req.query.number);
+    res.send(result.toString());
+});
+
+app.get("/cbrt", async function(req, res) {
+    let result = await roots.RequestCbrt(req.query.number);
+    res.send(result.toString());
+});
+
+app.get("/nrt", async function(req, res) {
+    let result = await roots.RequestNrt(req.query.number, req.query.root);
+    res.send(result.toString());
+});
+
+app.post("/login", async function(req, res) {
+    const { username, password } = req.body;
+    let status = await authentication.Login(username, password, `localhost:${port}`);
+    return res.status(status).json();
+})
+
+app.post("/register", async function(req, res) {
+    const { username, password, oneTimeID } = req.body;
+    let status = await authentication.Register(username, password, oneTimeID, `localhost:${port}`);
+    return res.status(status).json();
+})
+
+app.get("/message", async function(req, res) {
+    const { receiver, message } = req.query;
+    messenger.send(receiver, message);
+    return res.status(200).json();
+})
+
+app.get("/messages", async function(req, res) {
+    return res.status(200).json(messenger.getAll());
 })
 
 app.post("/message",async (req,res) => {
